@@ -8,25 +8,17 @@ var fs = require('fs');
 
 console.log("Starting backend mobile app: ", process.argv[1]);
 
-var app = express();
+var app = express(); // Express app
 
-// Enable CORS for all requests
-app.use(cors());
-var jsonParser = bodyParser.json();
+app.use(cors()); // Enable CORS for all requests
+var jsonParser = bodyParser.json(); // Setup JSON body parser
 
 // Bootstrap routes
-require('./config/routes')(app, jsonParser, upload);
-
-app.get('/test', jsonParser, function (req, res) {
-	res.json({ message: 'test endpoint under construction' });
-});
-
-app.get('/api/v1/bpms/', jsonParser, function (req, res) {
-	res.json({ message: 'bpms endpoint under construction' });
-});
+require('./routes/routes')(app, jsonParser, upload);
 
 var port = process.env.FH_PORT || process.env.OPENSHIFT_NODEJS_PORT || 7001;
 var host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+
 app.listen(port, host, function () {
 	console.log("App started at: " + new Date() + " on port: " + port);
 });
