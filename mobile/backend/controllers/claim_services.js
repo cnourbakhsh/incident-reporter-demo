@@ -1,26 +1,20 @@
 var request = require('request');
-var http = require('http')
-  , https = require('https')
-  //,rest = require('restler')
-  , fs = require('fs');
-
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
 var process_server = require('./process_server');
-
 
 var SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'localhost:8080';
 
+exports.addPhoto = function (req, res) {
 
-exports.addPhoto = function (req, res){
     var fileName = req.file.originalname;
-
-    console.log("Inside addPhoto");
-    console.log("originalname: " + fileName);
-
     var instanceId = req.params.instanceId;
     var updateSource = req.params.messageSource;
 
+    console.log("Inside addPhoto");
+    console.log("originalname: " + fileName);
     console.log("instanceId : " + instanceId + ", updateSource: " + updateSource);
-
     console.log("fileName passes by client: " + req.params.fileName);
 
     var options = {
@@ -32,40 +26,22 @@ exports.addPhoto = function (req, res){
         method: 'POST'
     };
 
-    //var filePost = request.post('http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId,
     var filePost = request(options, function (error, response, body) {
-
-        //console.log("BODY: ", body, typeof body);
         console.log("response.statusCode: ", response.statusCode);
-
         if (!error && response.statusCode == 200) {
-
-            // sample response
-            // {
-            //     "message": "successful file upload",
-            //     "details": "1-iden_new.png",
-            //     "result": true
-            // }
-
             var data = JSON.parse(body);
             console.log("DATA: ", data);
-
-            process_server.addPhoto(instanceId, fileName, updateSource, function(){
+            process_server.addPhoto(instanceId, fileName, updateSource, function () {
                 console.log("Done adding photo: " + fileName);
-                return res.json({link: "http://" + SERVICES_SERVER_HOST + "/photos/" + instanceId + "/" + fileName});
+                return res.json({ link: "http://" + SERVICES_SERVER_HOST + "/photos/" + instanceId + "/" + fileName });
             });
-
-        }
-        else if (error){
-            console.error('Error happened: '+ error);
-
+        } else if (error) {
+            console.error('Error happened: ' + error);
             res.json(error);
-        }
-        else{
+        } else {
             res.json(body);
         }
     });
-
     var form = filePost.form();
     form.append('file', fs.createReadStream(req.file.path), {
         filename: fileName,
@@ -74,6 +50,5 @@ exports.addPhoto = function (req, res){
 };
 
 exports.createClaim = function (req, res) {
-
     console.log("Inside createClaim, not implemented yet");
 };

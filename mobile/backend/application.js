@@ -13,12 +13,12 @@ var app = express(); // Express app
 app.use(cors()); // Enable CORS for all requests
 var jsonParser = bodyParser.json(); // Setup JSON body parser
 
-// Bootstrap routes
-require('./routes/routes')(app, jsonParser, upload);
+require('./routes/routes')(app, jsonParser, upload); // Bootstrap app routes
 
 var port = process.env.FH_PORT || process.env.OPENSHIFT_NODEJS_PORT || 7001;
 var host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
 app.listen(port, host, function () {
 	console.log("App started at: " + new Date() + " on port: " + port);
+	console.log(process.env);
 });
