@@ -25,9 +25,9 @@ module.exports = function (app, jsonParser, upload) {
     //     res.json({message: 'doadjuster endpoint under construction'});
     // });
 
-    app.get('/api/v1/bpms/download-photo/:instanceId/:fileName', jsonParser, function(req, res) {
+    app.get('/api/v1/bpms/download-photo/:instanceId/:fileName', jsonParser, function (req, res) {
         console.log("download-photo not implemented yet");
-        res.json({message: 'download-photo endpoint under construction'});
+        res.json({ message: 'download-photo endpoint under construction' });
     });
 
     // get list of existing claims
@@ -35,24 +35,24 @@ module.exports = function (app, jsonParser, upload) {
 
 
     // load
-    app.get('/v1/api/claim', jsonParser, function(req, res) {
+    app.get('/v1/api/claim', jsonParser, function (req, res) {
         console.log("load claim not implemented yet");
-        res.json({message: 'claim endpoint under construction'});
+        res.json({ message: 'claim endpoint under construction' });
     });
 
     // create
     app.post('/v1/api/claim', jsonParser, claim_services.createClaim);
 
     // update
-    app.put('/v1/api/claim', jsonParser, function(req, res) {
+    app.put('/v1/api/claim', jsonParser, function (req, res) {
         console.log("update claim not implemented yet");
-        res.json({message: 'claim endpoint under construction'});
+        res.json({ message: 'claim endpoint under construction' });
     });
 
     // delete
-    app.delete('/v1/api/claim', jsonParser, function(req, res) {
+    app.delete('/v1/api/claim', jsonParser, function (req, res) {
         console.log("delete claim not implemented yet");
-        res.json({message: 'claim endpoint under construction'});
+        res.json({ message: 'claim endpoint under construction' });
     });
 
     // DECISION SERVER ROUTES
