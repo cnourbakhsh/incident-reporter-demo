@@ -20,6 +20,7 @@ exports.getExistingClaims = function (req, res) {
 
         // Send request
         request(options, function (error, response, body) {
+            console.log(response);
             if (!error && response.statusCode == 200) {
                 var existingClaims = [];
                 var claimCount = 0;
@@ -55,6 +56,7 @@ exports.getExistingClaims = function (req, res) {
             }
         });
     }
+    console.log("Exiting getExistingClaims");
 };
 
 function loadClaimDetails(process, cb) {

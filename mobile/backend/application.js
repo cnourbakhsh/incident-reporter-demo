@@ -15,7 +15,7 @@ var jsonParser = bodyParser.json(); // Setup JSON body parser
 
 require('./routes/routes')(app, jsonParser, upload); // Bootstrap app routes
 
-var port = process.env.FH_PORT || process.env.OPENSHIFT_NODEJS_PORT || 7001;
+var port = process.env.OPENSHIFT_NODEJS_PORT || 7001;
 var host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
 app.listen(port, host, function () {
