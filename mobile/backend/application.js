@@ -20,5 +20,5 @@ var host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
 app.listen(port, host, function () {
 	console.log("App started at: " + new Date() + " on port: " + port);
-	console.log(process.env);
+	//console.log(process.env);
 });
