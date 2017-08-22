@@ -8,54 +8,54 @@ var SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'localhost:8080';
 
 exports.getExistingClaims = function (req, res) {
     console.log("Inside getExistingClaims, req: ", req);
-    if (req.body) {
-        var options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/processes/instances?status=1',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'GET'
-        };
+    //if (req.body) {
+    var options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/processes/instances?status=1',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'GET'
+    };
 
-        // Send request
-        request(options, function (error, response, body) {
-            console.log('getExistingClaims: response: ', response);
-            if (!error && response.statusCode == 200) {
-                var existingClaims = [];
-                var claimCount = 0;
-                var processes = JSON.parse(body)["process-instance"];
-                var processCount = processes.length;
-                if (processes) {
-                    processes.forEach(function (process) {
-                        loadClaimDetails(process, function (claim) {
-                            claimCount++;
-                            if (claim != null || claim != undefined) {
-                                console.log("add claim: ", claim.questionnaire.id);
-                                claim.photos = [];
-                                // Let's fix the photos
-                                if (claim.incidentPhotoIds && claim.incidentPhotoIds.length > 0) {
-                                    claim.incidentPhotoIds.forEach(function (p, i) {
-                                        var link = 'http://' + SERVICES_SERVER_HOST + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
-                                        claim.photos.push(link);
-                                    });
-                                }
-                                existingClaims.push(claim);
+    // Send request
+    request(options, function (error, response, body) {
+        console.log('getExistingClaims: response: ', response);
+        if (!error && response.statusCode == 200) {
+            var existingClaims = [];
+            var claimCount = 0;
+            var processes = JSON.parse(body)["process-instance"];
+            var processCount = processes.length;
+            if (processes) {
+                processes.forEach(function (process) {
+                    loadClaimDetails(process, function (claim) {
+                        claimCount++;
+                        if (claim != null || claim != undefined) {
+                            console.log("add claim: ", claim.questionnaire.id);
+                            claim.photos = [];
+                            // Let's fix the photos
+                            if (claim.incidentPhotoIds && claim.incidentPhotoIds.length > 0) {
+                                claim.incidentPhotoIds.forEach(function (p, i) {
+                                    var link = 'http://' + SERVICES_SERVER_HOST + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
+                                    claim.photos.push(link);
+                                });
                             }
-                            if (claimCount === processCount) {
-                                return res.json(existingClaims);
-                            }
-                        });
+                            existingClaims.push(claim);
+                        }
+                        if (claimCount === processCount) {
+                            return res.json(existingClaims);
+                        }
                     });
-                } else {
-                    console.log("No claims found");
-                }
+                });
             } else {
-                console.error("got an error: ", error);
-                return res.status(500).json({ error: 'DB record retreival error!' });
+                console.log("No claims found");
             }
-        });
-    }
+        } else {
+            console.error("got an error: ", error);
+            return res.status(500).json({ error: 'DB record retreival error!' });
+        }
+    });
+    //}
     console.log("Exiting getExistingClaims");
     return res.status(500).json({
         error: 'Bad code flow existing claims.'
