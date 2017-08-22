@@ -58,9 +58,9 @@ exports.getExistingClaims = function (req, res) {
         });
     }
     console.log("Exiting getExistingClaims");
-    return res.status(500).json({
-        error: 'Bad code flow existing claims.'
-    });
+    //return res.status(500).json({
+    //   error: 'Bad code flow existing claims.'
+    //});
 };
 
 function loadClaimDetails(process, cb) {
