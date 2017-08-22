@@ -17,7 +17,7 @@ exports.getExistingClaims = function (req, res) {
         },
         method: 'GET'
     };
-
+    console.log('options: ' + options);
     // Send request
     request(options, function (error, response, body) {
         console.log('getExistingClaims: response: ', response);
