@@ -279,7 +279,8 @@
                                                                                                                                                                        
   </profiles>  
   <activeProfiles>                                                                                                                                                     
-    <activeProfile>securecentral</activeProfile>                                                                                                              
+    <activeProfile>securecentral</activeProfile>
+    <activeProfile>insecurecentral</activeProfile>                                                                                                            
     <activeProfile>customprofile</activeProfile>
   </activeProfiles>                                                                                                                                                    
 </settings> 
