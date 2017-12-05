@@ -1,59 +1,25 @@
-<div>
-  <br>
-  <div class="container-fluid">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">BPM Suite Process Instance Tracker</h3>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="pId">Process Id</label>
-              <input type="text" class="form-control" id="pId" placeholder="1" size="5">
-              <label for="pContainerId">Container Id</label>
-              <input type="text" class="form-control" id="pContainerId" placeholder="IncidentProcessorContainer" size="25">
-              <button class="btn btn-default">Update</button>
-              <input type="checkbox" class="form-control" p="pAutoUpdate" />
-              <label for="pAutoUpdate">Auto Update</label>
-              <span>(Remaining</span>
-              <button class="btn btn-default">Approve</button>
-              <input type="checkbox" class="form-control" id="pRemediationAccepted" />
-              <label for="pRemediationAccepted">Accepted</label>
-              <input type="text" class="form-control" id="pApprovalComments" size="25" placeholder="Approval Comments" />
-            </div>
-          </form>
-        </div>
-        <div class="row">
-          <div id="image">
-            <br />
-          </div>
-          <div id="comments">
-            <h3>Comments</h3>
-            <ul class="list-group">
-              <li class="list-group-item">Comments</li>
-            </ul>
-            <div>
-              <i>No comments added.</i>
-            </div>
-          </div>
-        </div>
-        <div class="row" style="padding-bottom: 50px; padding-left: 100px">
-          <div>
-            <h3>Photo Thumbnails</h3>
-          </div>
-          <div id="gallery">
-            <div class="img-wrapper">
-              <!-- <a target="_blank" href="{{photo}}">
-                <img class="img-rounded" ng-src="{{photo}}" height="100px" style="padding-left: 20px;">
-              </a> -->
-            </div>
-          </div>
-          <div>
-            <i>No photos uploaded.</i>
-          </div>
-        </div>
-      </div>
+<div class="container">
+  <form (ngSubmit)="update()" #servicesForm="ngForm">
+    <div class="form-group">
+      <label for="processId">Process ID</label>
+      <input type="text" class="form-control" id="processId" [(ngModel)]="processId" name="processId" required>
     </div>
-  </div>
+    <div class="form-group">
+      <label for="containerId">Container ID</label>
+      <input type="text" class="form-control" id="containerId" required>
+    </div>
+    <div class="form-group">
+      <label class="form-check-label">Auto Update</label>
+      <input type="checkbox" class="form-check-input" id="autoUpdate" [(ngModel)]="autoUpdate" name="autoUpdate">
+    </div>
+    <div class="form-group">
+      <label class="form-check-label">Accepted</label>
+      <input type="checkbox" class="form-check-input" id="accepted" disabled>
+    </div>
+    <div class="form-group">
+      <label for="acceptedComment">Accepted Comment</label>
+      <input type="text" class="form-control" id="acceptedComment" disabled>
+    </div>
+    <button type="submit" class="btn btn-success">Update</button>
+  </form>
 </div>
