@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "http-server -g --cors",
+    "start": "cd dist; http-server -g --cors",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
