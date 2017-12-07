@@ -114,48 +114,48 @@ var Server = (function () {
         console.log('app createIncident');
         var incidentData = req.body;
         var msg = {
-            lookup: 'summit17-ks',
-            commands: [{
-                    insert: {
-                        object: {
+            'lookup': 'summit17-ks',
+            'commands': [{
+                    'insert': {
+                        'object': {
                             'com.redhat.vizuri.demo.domain.Incident': {
-                                id: incidentData.id,
-                                reporterUserId: incidentData.reporterUserId,
-                                incidentType: incidentData.type,
-                                description: incidentData.description,
-                                incidentDate: incidentData.incidentDate,
-                                buildingName: incidentData.buildingName,
-                                stateCode: incidentData.stateCode,
-                                zipCode: incidentData.postalCode
+                                'id': incidentData.id,
+                                'reporterUserId': incidentData.reporterUserId,
+                                'incidentType': incidentData.type,
+                                'description': incidentData.description,
+                                'incidentDate': incidentData.incidentDate,
+                                'buildingName': incidentData.buildingName,
+                                'stateCode': incidentData.stateCode,
+                                'zipCode': incidentData.postalCode
                             }
                         },
-                        disconnected: true,
+                        'disconnected': true,
                         'out-identifier': 'incident',
                         'return-object': false,
                         'entry-point': 'DEFAULT'
                     }
                 }, {
                     'set-focus': {
-                        name: 'construct-customer-questions'
+                        'name': 'construct-customer-questions'
                     }
                 }, {
                     'fire-all-rules': {
-                        max: -1,
+                        'max': -1,
                         'out-identifier': 'construct-fired'
                     }
                 }, {
                     'set-focus': {
-                        name: 'question-cleanup'
+                        'name': 'question-cleanup'
                     }
                 }, {
                     'fire-all-rules': {
-                        max: -1,
+                        'max': -1,
                         'out-identifier': 'cleanup-fired'
                     }
                 }, {
-                    query: {
-                        name: 'get-questionnaires',
-                        arguments: [],
+                    'query': {
+                        'name': 'get-questionnaires',
+                        'arguments': [],
                         'out-identifier': 'questionnaires'
                     }
                 }]
