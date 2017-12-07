@@ -380,6 +380,7 @@ export class Server {
 
     private startProcess(req, res) {
         console.log('app startProcess');
+        console.log('cnourbakhsh ', req);
         let claim = req.body.claim;
         let claimIncident = claim.incident;
 

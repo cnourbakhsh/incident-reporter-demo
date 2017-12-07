@@ -366,6 +366,7 @@ var Server = (function () {
     };
     Server.prototype.startProcess = function (req, res) {
         console.log('app startProcess');
+        console.log('cnourbakhsh ', req);
         var claim = req.body.claim;
         var claimIncident = claim.incident;
         var incident = {
