@@ -6,19 +6,21 @@ import * as http from 'http';
 import * as multer from 'multer';
 import * as fs from 'fs';
 
+// Must place this variables here due to this scoping issues
+let PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'localhost:8080';
+let DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'localhost:8080';
+let SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'localhost:8080';
+let PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || 'ProcessContainer';
+let DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || 'DecisionContainer';
+let BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
+let REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
+
 export class Server {
 
     app: any;
     port: number;
     host: string;
     jsonParser: any;
-    PROCESS_SERVER_HOST: string;
-    DECISION_SERVER_HOST: string;
-    SERVICES_SERVER_HOST: string;
-    PROCESS_CONTAINER_ID: string;
-    DECISION_CONTAINER_ID: string;
-    BASIC_AUTH: string;
-    REQUEST_AUTHORIZATION: string;
     upload: multer.Instance;
     fs: any;
 
@@ -29,16 +31,8 @@ export class Server {
 
         this.port = +<string>process.env.OPENSHIFT_NODEJS_PORT || 7001;
         this.host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
-        this.PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'localhost:8080';
-        this.DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'localhost:8080';
-        this.SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'localhost:8080';
-        this.PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || 'ProcessContainer';
-        this.DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || 'DecisionContainer';
-        this.BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
-        this.REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
 
         this.upload = multer({ dest: 'uploads/' });
-
         this.jsonParser = bodyParser.json();
         this.routes();
     }
@@ -71,7 +65,7 @@ export class Server {
         let updateSource = req.params.messageSource;
 
         let options = {
-            url: 'http://' + this.SERVICES_SERVER_HOST + '/photos/' + instanceId,
+            url: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId,
             headers: {
                 'Accept': 'application/json'
             },
@@ -82,7 +76,7 @@ export class Server {
             if (!error && response.statusCode == 200) {
                 let data = JSON.parse(body);
                 this.processAddPhoto(instanceId, fileName, updateSource, function () {
-                    return res.json({ link: 'http://' + this.SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
+                    return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
             } else if (error) {
                 res.json(error);
@@ -181,11 +175,11 @@ export class Server {
         };
 
         let options = {
-            url: 'http://' + this.DECISION_SERVER_HOST + '/kie-server/services/rest/server/containers/instances/' + this.DECISION_CONTAINER_ID,
+            url: 'http://' + DECISION_SERVER_HOST + '/kie-server/services/rest/server/containers/instances/' + DECISION_CONTAINER_ID,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': this.REQUEST_AUTHORIZATION
+                'Authorization': REQUEST_AUTHORIZATION
             },
             method: 'POST',
             json: msg
@@ -283,11 +277,11 @@ export class Server {
         msg.commands = commands.concat(ruleCommands);
 
         let options = {
-            url: 'http://' + this.DECISION_SERVER_HOST + '/kie-server/services/rest/server/containers/instances/' + this.DECISION_CONTAINER_ID,
+            url: 'http://' + DECISION_SERVER_HOST + '/kie-server/services/rest/server/containers/instances/' + DECISION_CONTAINER_ID,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': this.REQUEST_AUTHORIZATION
+                'Authorization': REQUEST_AUTHORIZATION
             },
             method: 'POST',
             json: msg
@@ -317,10 +311,10 @@ export class Server {
         console.log('app getExistingClaims');
         if (req.body) {
             let options = {
-                url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/processes/instances?status=1',
+                url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/processes/instances?status=1',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': this.BASIC_AUTH
+                    'Authorization': BASIC_AUTH
                 },
                 method: 'GET'
             }
@@ -338,7 +332,7 @@ export class Server {
                                     claim.photos = [];
                                     if (claim.incidentPhotoIds && claim.incidentPhotoIds.length > 0) {
                                         for (let p of claim.incidentPhotoIds) {
-                                            let link = 'http://' + this.SERVICES_SERVER_HOST + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
+                                            let link = 'http://' + SERVICES_SERVER_HOST + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
                                             claim.photos.push(link);
                                         }
                                     }
@@ -363,10 +357,10 @@ export class Server {
         console.log('app loadClaimDetails');
         let instanceId = process['process-instance-id'];
         let options = {
-            url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
+            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': this.BASIC_AUTH
+                'Authorization': BASIC_AUTH
             },
             method: 'GET'
         };
@@ -454,11 +448,11 @@ export class Server {
         };
 
         let options = {
-            url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/processes/processes.report-incident/instances',
+            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/processes.report-incident/instances',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': this.BASIC_AUTH
+                'Authorization': BASIC_AUTH
             },
             method: 'POST',
             json: msg
@@ -540,11 +534,11 @@ export class Server {
     private signalHumanTask(instanceId, type, cb) {
         console.log('app signalHumanTask');
         let options = {
-            url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
+            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': this.BASIC_AUTH
+                'Authorization': BASIC_AUTH
             },
             method: 'POST'
         };
@@ -561,10 +555,10 @@ export class Server {
     private listReadyTasks(instanceId, type, cb) {
         console.log('app listReadyTasks');
         let options = {
-            url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
+            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': this.BASIC_AUTH
+                'Authorization': BASIC_AUTH
             },
             method: 'GET'
         };
@@ -592,11 +586,11 @@ export class Server {
     private updateInformation(taskId, updateInfo, cb) {
         console.log('app updateInformation');
         let options = {
-            url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
+            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': this.BASIC_AUTH
+                'Authorization': BASIC_AUTH
             },
             method: 'PUT',
             json: updateInfo
