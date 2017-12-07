@@ -11,8 +11,8 @@ var Server = (function () {
         console.log('Inside app constructor');
         this.app = express();
         this.app.use(cors());
-        this.port = 7001;
-        this.host = '0.0.0.0';
+        this.port = +process.env.OPENSHIFT_NODEJS_PORT || 7001;
+        this.host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
         this.PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'localhost:8080';
         this.DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'localhost:8080';
         this.SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'localhost:8080';
