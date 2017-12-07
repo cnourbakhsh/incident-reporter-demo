@@ -2,7 +2,7 @@
   "name": "refactored-mobile-backend",
   "version": "0.3.0",
   "dependencies": {},
-  "main": "application.js",
+  "main": "./dist/app.js",
   "scripts": {
     "start": "node ./dist/app.js"
   },
