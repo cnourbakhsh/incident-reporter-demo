@@ -186,6 +186,7 @@ export class Server {
         };
 
         request(options, (error, response, body) => {
+            console.log('cnourbakhsh ', body);
             if (!error && response.statusCode == 200) {
                 let questionnaire = body.result['execution-results'].results[0].value['org.drools.core.runtime.rule.impl.FlatQueryResults'].idFactHandleMaps.element[0].element[0].value['org.drools.core.common.DisconnectedFactHandle'].object['com.redhat.vizuri.demo.domain.Questionnaire'];
                 return res.json(questionnaire);
