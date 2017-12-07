@@ -116,49 +116,49 @@ var Server = (function () {
         var msg = {
             'lookup': 'summit17-ks',
             'commands': [{
-                'insert': {
-                    'object': {
-                        'com.redhat.vizuri.demo.domain.Incident': {
-                            'id': incidentData.id,
-                            'reporterUserId': incidentData.reporterUserId,
-                            'incidentType': incidentData.type,
-                            'description': incidentData.description,
-                            'incidentDate': incidentData.incidentDate,
-                            'buildingName': incidentData.buildingName,
-                            'stateCode': incidentData.stateCode,
-                            'zipCode': incidentData.postalCode
-                        }
-                    },
-                    'disconnected': true,
-                    'out-identifier': 'incident',
-                    'return-object': false,
-                    'entry-point': 'DEFAULT'
-                }
-            }, {
-                'set-focus': {
-                    'name': 'construct-customer-questions'
-                }
-            }, {
-                'fire-all-rules': {
-                    'max': -1,
-                    'out-identifier': 'construct-fired'
-                }
-            }, {
-                'set-focus': {
-                    'name': 'question-cleanup'
-                }
-            }, {
-                'fire-all-rules': {
-                    'max': -1,
-                    'out-identifier': 'cleanup-fired'
-                }
-            }, {
-                'query': {
-                    'name': 'get-questionnaires',
-                    'arguments': [],
-                    'out-identifier': 'questionnaires'
-                }
-            }]
+                    'insert': {
+                        'object': {
+                            'com.redhat.vizuri.demo.domain.Incident': {
+                                'id': incidentData.id,
+                                'reporterUserId': incidentData.reporterUserId,
+                                'incidentType': incidentData.type,
+                                'description': incidentData.description,
+                                'incidentDate': incidentData.incidentDate,
+                                'buildingName': incidentData.buildingName,
+                                'stateCode': incidentData.stateCode,
+                                'zipCode': incidentData.postalCode
+                            }
+                        },
+                        'disconnected': true,
+                        'out-identifier': 'incident',
+                        'return-object': false,
+                        'entry-point': 'DEFAULT'
+                    }
+                }, {
+                    'set-focus': {
+                        'name': 'construct-customer-questions'
+                    }
+                }, {
+                    'fire-all-rules': {
+                        'max': -1,
+                        'out-identifier': 'construct-fired'
+                    }
+                }, {
+                    'set-focus': {
+                        'name': 'question-cleanup'
+                    }
+                }, {
+                    'fire-all-rules': {
+                        'max': -1,
+                        'out-identifier': 'cleanup-fired'
+                    }
+                }, {
+                    'query': {
+                        'name': 'get-questionnaires',
+                        'arguments': [],
+                        'out-identifier': 'questionnaires'
+                    }
+                }]
         };
         var options = {
             url: 'http://' + DECISION_SERVER_HOST + '/kie-server/services/rest/server/containers/instances/' + DECISION_CONTAINER_ID,
@@ -221,15 +221,15 @@ var Server = (function () {
             }
         };
         var ruleCommands = [{
-            'set-focus': {
-                name: 'sync-answers'
-            }
-        }, {
-            'fire-all-rules': {
-                max: 100,
-                'out-identifier': 'sync-answers-fired'
-            }
-        }];
+                'set-focus': {
+                    name: 'sync-answers'
+                }
+            }, {
+                'fire-all-rules': {
+                    max: 100,
+                    'out-identifier': 'sync-answers-fired'
+                }
+            }];
         var msg = {
             lookup: 'summit17-ks',
             commands: new Array()
@@ -313,7 +313,7 @@ var Server = (function () {
                     if (processes && processCount_1 > 0) {
                         for (var _i = 0, processes_1 = processes; _i < processes_1.length; _i++) {
                             var process_1 = processes_1[_i];
-                            this.loadClaimDetails(process_1, function (claim) {
+                            _this.loadClaimDetails(process_1, function (claim) {
                                 claimCount_1++;
                                 if (claim != null || claim != undefined) {
                                     claim.photos = [];
