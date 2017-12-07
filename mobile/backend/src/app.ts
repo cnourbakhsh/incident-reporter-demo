@@ -174,6 +174,7 @@ export class Server {
             }]
         };
 
+        console.log('cnourbakhsh', msg);
         let options = {
             url: 'http://' + DECISION_SERVER_HOST + '/kie-server/services/rest/server/containers/instances/' + DECISION_CONTAINER_ID,
             headers: {
@@ -187,9 +188,11 @@ export class Server {
 
         request(options, (error, response, body) => {
             console.log('cnourbakhsh ', body);
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode == 200 && body.result) {
                 let questionnaire = body.result['execution-results'].results[0].value['org.drools.core.runtime.rule.impl.FlatQueryResults'].idFactHandleMaps.element[0].element[0].value['org.drools.core.common.DisconnectedFactHandle'].object['com.redhat.vizuri.demo.domain.Questionnaire'];
                 return res.json(questionnaire);
+            } else {
+                return res.status(500).json({ message: 'An error has occured!' });
             }
         });
     }
