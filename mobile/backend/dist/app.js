@@ -13,6 +13,28 @@ var PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || 'ProcessContainer
 var DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || 'DecisionContainer';
 var BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
 var REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
+var loadClaimDetails = function (process, cb) {
+    console.log('app loadClaimDetails');
+    var instanceId = process['process-instance-id'];
+    var options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'GET'
+    };
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var claim = JSON.parse(body);
+            claim.processId = instanceId;
+            cb(claim);
+        }
+        else {
+            cb(null);
+        }
+    });
+};
 var Server = (function () {
     function Server() {
         console.log('Inside app constructor');
@@ -293,7 +315,6 @@ var Server = (function () {
         });
     };
     Server.prototype.getExistingClaims = function (req, res) {
-        var _this = this;
         console.log('app getExistingClaims');
         if (req.body) {
             var options = {
@@ -313,7 +334,7 @@ var Server = (function () {
                     if (processes && processCount_1 > 0) {
                         for (var _i = 0, processes_1 = processes; _i < processes_1.length; _i++) {
                             var process_1 = processes_1[_i];
-                            _this.loadClaimDetails(process_1, function (claim) {
+                            loadClaimDetails(process_1, function (claim) {
                                 claimCount_1++;
                                 if (claim != null || claim != undefined) {
                                     claim.photos = [];
@@ -341,28 +362,6 @@ var Server = (function () {
                 }
             });
         }
-    };
-    Server.prototype.loadClaimDetails = function (process, cb) {
-        console.log('app loadClaimDetails');
-        var instanceId = process['process-instance-id'];
-        var options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'GET'
-        };
-        request(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                var claim = JSON.parse(body);
-                claim.processId = instanceId;
-                cb(claim);
-            }
-            else {
-                cb(null);
-            }
-        });
     };
     Server.prototype.startProcess = function (req, res) {
         console.log('app startProcess');

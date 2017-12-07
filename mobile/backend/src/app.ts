@@ -15,6 +15,29 @@ let DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || 'DecisionContai
 let BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
 let REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
 
+let loadClaimDetails = (process, cb) => {
+    console.log('app loadClaimDetails');
+    let instanceId = process['process-instance-id'];
+    let options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'GET'
+    };
+
+    request(options, (error, response, body) => {
+        if (!error && response.statusCode == 200) {
+            let claim = JSON.parse(body);
+            claim.processId = instanceId;
+            cb(claim);
+        } else {
+            cb(null);
+        }
+    });
+};
+
 export class Server {
 
     app: any;
@@ -328,7 +351,7 @@ export class Server {
                     let processCount = processes.length;
                     if (processes && processCount > 0) {
                         for (let process of processes) {
-                            this.loadClaimDetails(process, claim => {
+                            loadClaimDetails(process, claim => {
                                 claimCount++;
                                 if (claim != null || claim != undefined) {
                                     claim.photos = [];
@@ -353,29 +376,6 @@ export class Server {
                 }
             });
         }
-    }
-
-    private loadClaimDetails(process, cb) {
-        console.log('app loadClaimDetails');
-        let instanceId = process['process-instance-id'];
-        let options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'GET'
-        };
-
-        request(options, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
-                let claim = JSON.parse(body);
-                claim.processId = instanceId;
-                cb(claim);
-            } else {
-                cb(null);
-            }
-        });
     }
 
     private startProcess(req, res) {
