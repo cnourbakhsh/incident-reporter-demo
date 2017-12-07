@@ -48,7 +48,3 @@ exports.addPhoto = function (req, res) {
         contentType: req.file.mimetype
     });
 };
-
-exports.createClaim = function (req, res) {
-    console.log("Inside createClaim, not implemented yet");
-};

@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 var request = require("request");
 var multer = require("multer");
 var fs = require("fs");
-var Server = /** @class */ (function () {
+var Server = (function () {
     function Server() {
         console.log('Inside app constructor');
         this.app = express();
@@ -32,6 +32,10 @@ var Server = /** @class */ (function () {
     };
     Server.prototype.routes = function () {
         console.log('app routes');
+        this.app.get('/api/v1/test', this.jsonParser, function (req, res) {
+            console.log('app test');
+            res.json({ message: 'test' });
+        });
         this.app.post('/api/v1/bpms/startprocess', this.jsonParser, this.startProcess);
         this.app.post('/api/v1/bpms/add-comments/:instanceId', this.jsonParser, this.addComment);
         this.app.post('/api/v1/bpms/doadjuster/:instanceId/:complete', this.jsonParser, this.performRemediation);
@@ -225,7 +229,7 @@ var Server = /** @class */ (function () {
             }];
         var msg = {
             lookup: 'summit17-ks',
-            commands: []
+            commands: new Array()
         };
         var commands = [];
         var question;
@@ -299,7 +303,7 @@ var Server = /** @class */ (function () {
             };
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var existingClaims_1 = [];
+                    var existingClaims_1 = new Array();
                     var claimCount_1 = 0;
                     var processes = JSON.parse(body)['process-instance'];
                     var processCount_1 = processes.length;

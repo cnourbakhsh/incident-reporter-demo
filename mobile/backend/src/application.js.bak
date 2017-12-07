@@ -1,0 +1,21 @@
+let express = require('express');
+let cors = require('cors');
+let request = require('request');
+let bodyParser = require('body-parser');
+let multer = require('multer');
+let upload = multer({ dest: 'uploads/' });
+let fs = require('fs');
+
+let app = express(); // Express app
+
+app.use(cors()); // Enable CORS for all requests
+let jsonParser = bodyParser.json(); // Setup JSON body parser
+
+require('./routes/routes')(app, jsonParser, upload); // Bootstrap app routes
+
+let port = process.env.OPENSHIFT_NODEJS_PORT || 7001;
+let host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+
+app.listen(+port, host, function () {
+	console.log('Application started at: ' + new Date() + ' on port: ' + port);
+});

@@ -8,7 +8,7 @@ import * as fs from 'fs';
 
 export class Server {
 
-    app: Express.Application;
+    app: any;
     port: number;
     host: string;
     jsonParser: any;
@@ -51,6 +51,11 @@ export class Server {
 
     private routes() {
         console.log('app routes');
+        this.app.get('/api/v1/test', this.jsonParser, (req, res) => {
+            console.log('app test');
+            res.json({ message: 'test' });
+        });
+
         this.app.post('/api/v1/bpms/startprocess', this.jsonParser, this.startProcess);
         this.app.post('/api/v1/bpms/add-comments/:instanceId', this.jsonParser, this.addComment);
         this.app.post('/api/v1/bpms/doadjuster/:instanceId/:complete', this.jsonParser, this.performRemediation);
@@ -247,10 +252,10 @@ export class Server {
         }];
         let msg = {
             lookup: 'summit17-ks',
-            commands: []
+            commands: new Array<any>()
         };
 
-        let commands = [];
+        let commands: Array<any> = [];
         let question;
         let answer;
 
@@ -322,7 +327,7 @@ export class Server {
             }
             request(options, (error, response, body) => {
                 if (!error && response.statusCode == 200) {
-                    let existingClaims = [];
+                    let existingClaims = new Array<any>();
                     let claimCount = 0;
                     let processes = JSON.parse(body)['process-instance'];
                     let processCount = processes.length;
@@ -426,7 +431,7 @@ export class Server {
             strValue: 'No'
         };
 
-        let question, answer;
+        let question, answer: any;
 
         for (let q of claim.questionnaire.questions) {
             question = JSON.parse(JSON.stringify(questionTemplate));
@@ -434,14 +439,14 @@ export class Server {
             question.description = q.description;
             question.enabled = q.enabled;
             question.order = q.order;
-            questionnaire['com.redhat.vizuri.demo.domain.Questionnaire'].questions.push(question);
+            questionnaire['com.redhat.vizuri.demo.domain.Questionnaire'].questions.push(<never>question);
         }
 
         for (let a of claim.questionnaire.answers) {
             answer = JSON.parse(JSON.stringify(answerTemplate));
             answer.questionId = a.questionId;
             answer.strValue = a.strValue;
-            questionnaire['com.redhat.vizuri.demo.domain.Questionnaire'].answers.push(answer);
+            questionnaire['com.redhat.vizuri.demo.domain.Questionnaire'].answers.push(<never>answer);
         }
 
         let msg = {
