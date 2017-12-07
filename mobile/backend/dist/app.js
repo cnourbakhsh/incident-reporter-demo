@@ -39,7 +39,7 @@ var Server = (function () {
         this.app.post('/api/v1/bpms/startprocess', this.jsonParser, this.startProcess);
         this.app.post('/api/v1/bpms/add-comments/:instanceId', this.jsonParser, this.addComment);
         this.app.post('/api/v1/bpms/doadjuster/:instanceId/:complete', this.jsonParser, this.performRemediation);
-        this.app.get('/v1/api/claims', this.jsonParser, this.getExistingClaims);
+        this.app.get('/api/v1/claims', this.jsonParser, this.getExistingClaims);
         this.app.post('/api/v1/bpms/customer-incident', this.jsonParser, this.createIncident);
         this.app.post('/api/v1/bpms/update-questions', this.jsonParser, this.updateQuestions);
         this.app.post('/api/v1/bpms/upload-photo/:instanceId/:fileName/:messageSource', this.upload.single('file'), this.claimAddPhoto);
