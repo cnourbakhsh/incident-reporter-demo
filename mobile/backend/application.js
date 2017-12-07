@@ -8,6 +8,7 @@ var multer = require("multer");
 var fs = require("fs");
 var Server = /** @class */ (function () {
     function Server() {
+        console.log('Inside app constructor');
         this.app = express();
         this.app.use(cors());
         this.port = 7001;
@@ -30,6 +31,7 @@ var Server = /** @class */ (function () {
         });
     };
     Server.prototype.routes = function () {
+        console.log('app routes');
         this.app.post('/api/v1/bpms/startprocess', this.jsonParser, this.startProcess);
         this.app.post('/api/v1/bpms/add-comments/:instanceId', this.jsonParser, this.addComment);
         this.app.post('/api/v1/bpms/doadjuster/:instanceId/:complete', this.jsonParser, this.performRemediation);
@@ -40,6 +42,7 @@ var Server = /** @class */ (function () {
     };
     Server.prototype.claimAddPhoto = function (req, res) {
         var _this = this;
+        console.log('app claimAddPhoto');
         var fileName = req.file.originalname;
         var instanceId = req.params.instanceId;
         var updateSource = req.params.messageSource;
@@ -72,6 +75,7 @@ var Server = /** @class */ (function () {
     };
     Server.prototype.processAddPhoto = function (instanceId, fileName, source, cb) {
         var _this = this;
+        console.log('app processAddPhoto');
         var updateInfo = {
             photoId: fileName,
             updateSource: source
@@ -103,6 +107,7 @@ var Server = /** @class */ (function () {
         });
     };
     Server.prototype.createIncident = function (req, res) {
+        console.log('app createIncident');
         var incidentData = req.body;
         var msg = {
             lookup: 'summit17-ks',
@@ -169,6 +174,7 @@ var Server = /** @class */ (function () {
         });
     };
     Server.prototype.updateQuestions = function (req, res) {
+        console.log('app updateQuestions');
         var questionnaire = req.body;
         var questionTemplate = {
             insert: {
@@ -281,6 +287,7 @@ var Server = /** @class */ (function () {
     };
     Server.prototype.getExistingClaims = function (req, res) {
         var _this = this;
+        console.log('app getExistingClaims');
         if (req.body) {
             var options = {
                 url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/processes/instances?status=1',
@@ -329,6 +336,7 @@ var Server = /** @class */ (function () {
         }
     };
     Server.prototype.loadClaimDetails = function (process, cb) {
+        console.log('app loadClaimDetails');
         var instanceId = process['process-instance-id'];
         var options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
@@ -350,6 +358,7 @@ var Server = /** @class */ (function () {
         });
     };
     Server.prototype.startProcess = function (req, res) {
+        console.log('app startProcess');
         var claim = req.body.claim;
         var claimIncident = claim.incident;
         var incident = {
@@ -433,6 +442,7 @@ var Server = /** @class */ (function () {
     };
     Server.prototype.addComment = function (req, res) {
         var _this = this;
+        console.log('app addComment');
         var body = req.body;
         var instanceId = req.params.instanceId;
         var updateInfo = {
@@ -467,6 +477,7 @@ var Server = /** @class */ (function () {
     };
     Server.prototype.performRemediation = function (req, res) {
         var _this = this;
+        console.log('app performRemediation');
         var body = req.body;
         var instanceId = req.params.instanceId;
         var complete = req.params.complete;
@@ -498,6 +509,7 @@ var Server = /** @class */ (function () {
         });
     };
     Server.prototype.signalHumanTask = function (instanceId, type, cb) {
+        console.log('app signalHumanTask');
         var options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
             headers: {
@@ -517,6 +529,7 @@ var Server = /** @class */ (function () {
         });
     };
     Server.prototype.listReadyTasks = function (instanceId, type, cb) {
+        console.log('app listReadyTasks');
         var options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
             headers: {
@@ -548,6 +561,7 @@ var Server = /** @class */ (function () {
         });
     };
     Server.prototype.updateInformation = function (taskId, updateInfo, cb) {
+        console.log('app updateInformation');
         var options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
             headers: {

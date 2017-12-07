@@ -23,6 +23,7 @@ export class Server {
     fs: any;
 
     constructor() {
+        console.log('Inside app constructor');
         this.app = express();
         this.app.use(cors());
 
@@ -49,6 +50,7 @@ export class Server {
     }
 
     private routes() {
+        console.log('app routes');
         this.app.post('/api/v1/bpms/startprocess', this.jsonParser, this.startProcess);
         this.app.post('/api/v1/bpms/add-comments/:instanceId', this.jsonParser, this.addComment);
         this.app.post('/api/v1/bpms/doadjuster/:instanceId/:complete', this.jsonParser, this.performRemediation);
@@ -59,6 +61,7 @@ export class Server {
     }
 
     private claimAddPhoto(req, res) {
+        console.log('app claimAddPhoto');
         let fileName = req.file.originalname;
         let instanceId = req.params.instanceId;
         let updateSource = req.params.messageSource;
@@ -92,6 +95,7 @@ export class Server {
     }
 
     private processAddPhoto(instanceId, fileName, source, cb) {
+        console.log('app processAddPhoto');
         let updateInfo = {
             photoId: fileName,
             updateSource: source
@@ -122,6 +126,7 @@ export class Server {
     }
 
     private createIncident(req, res) {
+        console.log('app createIncident');
         let incidentData = req.body;
         let msg = {
             lookup: 'summit17-ks',
@@ -191,6 +196,7 @@ export class Server {
     }
 
     private updateQuestions(req, res) {
+        console.log('app updateQuestions');
         let questionnaire = req.body;
         let questionTemplate = {
             insert: {
@@ -304,6 +310,7 @@ export class Server {
     }
 
     private getExistingClaims(req, res) {
+        console.log('app getExistingClaims');
         if (req.body) {
             let options = {
                 url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/processes/instances?status=1',
@@ -349,6 +356,7 @@ export class Server {
     }
 
     private loadClaimDetails(process, cb) {
+        console.log('app loadClaimDetails');
         let instanceId = process['process-instance-id'];
         let options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
@@ -371,6 +379,7 @@ export class Server {
     }
 
     private startProcess(req, res) {
+        console.log('app startProcess');
         let claim = req.body.claim;
         let claimIncident = claim.incident;
 
@@ -461,6 +470,7 @@ export class Server {
     }
 
     private addComment(req, res) {
+        console.log('app addComment');
         let body = req.body;
         let instanceId = req.params.instanceId;
         let updateInfo = {
@@ -493,6 +503,7 @@ export class Server {
     }
 
     private performRemediation(req, res) {
+        console.log('app performRemediation');
         let body = req.body;
         let instanceId = req.params.instanceId;
         let complete = req.params.complete;
@@ -523,6 +534,7 @@ export class Server {
     }
 
     private signalHumanTask(instanceId, type, cb) {
+        console.log('app signalHumanTask');
         let options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
             headers: {
@@ -543,6 +555,7 @@ export class Server {
     }
 
     private listReadyTasks(instanceId, type, cb) {
+        console.log('app listReadyTasks');
         let options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
             headers: {
@@ -573,6 +586,7 @@ export class Server {
     }
 
     private updateInformation(taskId, updateInfo, cb) {
+        console.log('app updateInformation');
         let options = {
             url: 'http://' + this.PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + this.PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
             headers: {
