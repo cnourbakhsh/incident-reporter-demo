@@ -29,13 +29,12 @@ let loadClaimDetails = (process, cb) => {
     };
 
     request(options, (error, response, body) => {
+        console.log('error ', error);
         if (!error && response.statusCode == 200) {
-            console.log('cnourbakhsh 0');
             let claim = JSON.parse(body);
             claim.processId = instanceId;
             cb(claim);
         } else {
-            console.log('cnourbakhsh 1');
             cb(null);
         }
     });
