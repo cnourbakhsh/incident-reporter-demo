@@ -16,6 +16,7 @@ var REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcj
 var loadClaimDetails = function (process, cb) {
     console.log('app loadClaimDetails');
     var instanceId = process['process-instance-id'];
+    console.log('instanceId', instanceId);
     var options = {
         url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
         headers: {
@@ -26,11 +27,13 @@ var loadClaimDetails = function (process, cb) {
     };
     request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
+            console.log('cnourbakhsh 0');
             var claim = JSON.parse(body);
             claim.processId = instanceId;
             cb(claim);
         }
         else {
+            console.log('cnourbakhsh 1');
             cb(null);
         }
     });
@@ -365,7 +368,6 @@ var Server = (function () {
     };
     Server.prototype.startProcess = function (req, res) {
         console.log('app startProcess');
-        console.log('cnourbakhsh ', req.body);
         var claim = req.body;
         var claimIncident = claim.incident;
         var incident = {
