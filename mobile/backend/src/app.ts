@@ -30,6 +30,8 @@ let loadClaimDetails = (process, cb) => {
 
     request(options, (error, response, body) => {
         console.log('error ', error);
+        console.log('response ', response);
+        console.log('body ', body);
         if (!error && response.statusCode == 200) {
             let claim = JSON.parse(body);
             claim.processId = instanceId;
