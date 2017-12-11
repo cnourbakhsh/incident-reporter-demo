@@ -60,6 +60,38 @@ var signalHumanTask = function (instanceId, type, cb) {
         }
     });
 };
+var listReadyTasks = function (instanceId, type, cb) {
+    console.log('app listReadyTasks');
+    var options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'GET'
+    };
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var data = JSON.parse(body);
+            var tasks = data['task-summary'];
+            if (tasks != undefined) {
+                for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
+                    var task = tasks_1[_i];
+                    if (task['task-name'] === type && task['task-name'] === 'Ready') {
+                        return cb(null, task['task-id']);
+                    }
+                }
+                return cb(new Error('Unable to find task'));
+            }
+            else {
+                cb(null);
+            }
+        }
+        else {
+            cb(error);
+        }
+    });
+};
 var Server = (function () {
     function Server() {
         console.log('Inside app constructor');
@@ -133,7 +165,7 @@ var Server = (function () {
         };
         signalHumanTask(instanceId, 'Update%20Information', function (error) {
             if (!error) {
-                _this.listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
+                listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
                     if (!error) {
                         _this.updateInformation(taskId, updateInfo, function (error) {
                             if (!error) {
@@ -482,7 +514,7 @@ var Server = (function () {
         };
         signalHumanTask(instanceId, 'Update%20Information', function (error) {
             if (!error) {
-                _this.listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
+                listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
                     if (!error) {
                         _this.updateInformation(taskId, updateInfo, function (error) {
                             if (!error) {
@@ -515,7 +547,7 @@ var Server = (function () {
         var updateInfo = { completed: complete };
         signalHumanTask(instanceId, 'Perform%20Remediation', function (error) {
             if (!error) {
-                _this.listReadyTasks(instanceId, 'Perform Remediation', function (error, taskId) {
+                listReadyTasks(instanceId, 'Perform Remediation', function (error, taskId) {
                     if (!error) {
                         _this.updateInformation(taskId, updateInfo, function (error) {
                             if (!error) {
@@ -536,38 +568,6 @@ var Server = (function () {
             else {
                 var msg = 'Unable to signal for human task, error: ' + error;
                 res.json(msg);
-            }
-        });
-    };
-    Server.prototype.listReadyTasks = function (instanceId, type, cb) {
-        console.log('app listReadyTasks');
-        var options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'GET'
-        };
-        request(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                var data = JSON.parse(body);
-                var tasks = data['task-summary'];
-                if (tasks != undefined) {
-                    for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
-                        var task = tasks_1[_i];
-                        if (task['task-name'] === type && task['task-name'] === 'Ready') {
-                            return cb(null, task['task-id']);
-                        }
-                    }
-                    return cb(new Error('Unable to find task'));
-                }
-                else {
-                    cb(null);
-                }
-            }
-            else {
-                cb(error);
             }
         });
     };

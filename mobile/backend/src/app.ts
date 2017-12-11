@@ -64,6 +64,37 @@ let signalHumanTask = (instanceId, type, cb) => {
     });
 }
 
+let listReadyTasks = (instanceId, type, cb) => {
+    console.log('app listReadyTasks');
+    let options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'GET'
+    };
+
+    request(options, (error, response, body) => {
+        if (!error && response.statusCode == 200) {
+            let data = JSON.parse(body);
+            let tasks = data['task-summary'];
+            if (tasks != undefined) {
+                for (let task of tasks) {
+                    if (task['task-name'] === type && task['task-name'] === 'Ready') {
+                        return cb(null, task['task-id']);
+                    }
+                }
+                return cb(new Error('Unable to find task'));
+            } else {
+                cb(null);
+            }
+        } else {
+            cb(error);
+        }
+    });
+}
+
 export class Server {
 
     app: any;
@@ -150,7 +181,7 @@ export class Server {
 
         signalHumanTask(instanceId, 'Update%20Information', error => {
             if (!error) {
-                this.listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
+                listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
                     if (!error) {
                         this.updateInformation(taskId, updateInfo, error => {
                             if (!error) {
@@ -506,7 +537,7 @@ export class Server {
 
         signalHumanTask(instanceId, 'Update%20Information', error => {
             if (!error) {
-                this.listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
+                listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
                     if (!error) {
                         this.updateInformation(taskId, updateInfo, error => {
                             if (!error) {
@@ -537,7 +568,7 @@ export class Server {
 
         signalHumanTask(instanceId, 'Perform%20Remediation', error => {
             if (!error) {
-                this.listReadyTasks(instanceId, 'Perform Remediation', (error, taskId) => {
+                listReadyTasks(instanceId, 'Perform Remediation', (error, taskId) => {
                     if (!error) {
                         this.updateInformation(taskId, updateInfo, error => {
                             if (!error) {
@@ -555,37 +586,6 @@ export class Server {
             } else {
                 let msg = 'Unable to signal for human task, error: ' + error;
                 res.json(msg);
-            }
-        });
-    }
-
-    private listReadyTasks(instanceId, type, cb) {
-        console.log('app listReadyTasks');
-        let options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/queries/tasks/instances/process/' + instanceId + '?status=Ready',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'GET'
-        };
-
-        request(options, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
-                let data = JSON.parse(body);
-                let tasks = data['task-summary'];
-                if (tasks != undefined) {
-                    for (let task of tasks) {
-                        if (task['task-name'] === type && task['task-name'] === 'Ready') {
-                            return cb(null, task['task-id']);
-                        }
-                    }
-                    return cb(new Error('Unable to find task'));
-                } else {
-                    cb(null);
-                }
-            } else {
-                cb(error);
             }
         });
     }
