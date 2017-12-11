@@ -18,8 +18,6 @@ let REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcj
 let loadClaimDetails = (process, cb) => {
     console.log('app loadClaimDetails');
     let instanceId = process['process-instance-id'];
-    console.log('instanceId', instanceId);
-    console.log('auth ', BASIC_AUTH);
     let options = {
         url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/variables',
         headers: {
@@ -30,9 +28,6 @@ let loadClaimDetails = (process, cb) => {
     };
 
     request(options, (error, response, body) => {
-        console.log('error ', error);
-        console.log('response ', response);
-        console.log('body ', body);
         if (!error && response.statusCode == 200) {
             let claim = JSON.parse(body);
             claim.processId = instanceId;
@@ -125,10 +120,6 @@ export class Server {
 
     private routes() {
         console.log('app routes');
-        this.app.get('/api/v1/test', this.jsonParser, (req, res) => {
-            console.log('app test');
-            res.json({ message: 'test' });
-        });
         this.app.post('/api/v1/bpms/startprocess', this.jsonParser, this.startProcess);
         this.app.post('/api/v1/bpms/add-comments/:instanceId', this.jsonParser, this.addComment);
         this.app.post('/api/v1/bpms/doadjuster/:instanceId/:complete', this.jsonParser, this.performRemediation);
