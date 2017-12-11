@@ -19,8 +19,9 @@ let loadClaimDetails = (process, cb) => {
     console.log('app loadClaimDetails');
     let instanceId = process['process-instance-id'];
     console.log('instanceId', instanceId);
+    console.log('auth ', BASIC_AUTH);
     let options = {
-        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/' + instanceId + '/variables',
         headers: {
             'Accept': 'application/json',
             'Authorization': BASIC_AUTH
