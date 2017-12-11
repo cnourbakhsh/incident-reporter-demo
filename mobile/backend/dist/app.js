@@ -40,6 +40,26 @@ var loadClaimDetails = function (process, cb) {
         }
     });
 };
+var signalHumanTask = function (instanceId, type, cb) {
+    console.log('app signalHumanTask');
+    var options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'POST'
+    };
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            cb(null);
+        }
+        else {
+            cb(error);
+        }
+    });
+};
 var Server = (function () {
     function Server() {
         console.log('Inside app constructor');
@@ -111,7 +131,7 @@ var Server = (function () {
             photoId: fileName,
             updateSource: source
         };
-        this.signalHumanTask(instanceId, 'Update%20Information', function (error) {
+        signalHumanTask(instanceId, 'Update%20Information', function (error) {
             if (!error) {
                 _this.listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
                     if (!error) {
@@ -460,7 +480,7 @@ var Server = (function () {
             comment: body.claimComments,
             updateSource: body.messageSource
         };
-        this.signalHumanTask(instanceId, 'Update%20Information', function (error) {
+        signalHumanTask(instanceId, 'Update%20Information', function (error) {
             if (!error) {
                 _this.listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
                     if (!error) {
@@ -493,7 +513,7 @@ var Server = (function () {
         var instanceId = req.params.instanceId;
         var complete = req.params.complete;
         var updateInfo = { completed: complete };
-        this.signalHumanTask(instanceId, 'Perform%20Remediation', function (error) {
+        signalHumanTask(instanceId, 'Perform%20Remediation', function (error) {
             if (!error) {
                 _this.listReadyTasks(instanceId, 'Perform Remediation', function (error, taskId) {
                     if (!error) {
@@ -516,26 +536,6 @@ var Server = (function () {
             else {
                 var msg = 'Unable to signal for human task, error: ' + error;
                 res.json(msg);
-            }
-        });
-    };
-    Server.prototype.signalHumanTask = function (instanceId, type, cb) {
-        console.log('app signalHumanTask');
-        var options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'POST'
-        };
-        request(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                cb(null);
-            }
-            else {
-                cb(error);
             }
         });
     };

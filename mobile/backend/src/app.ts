@@ -43,6 +43,27 @@ let loadClaimDetails = (process, cb) => {
     });
 };
 
+let signalHumanTask = (instanceId, type, cb) => {
+    console.log('app signalHumanTask');
+    let options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'POST'
+    };
+
+    request(options, (error, response, body) => {
+        if (!error && response.statusCode == 200) {
+            cb(null);
+        } else {
+            cb(error);
+        }
+    });
+}
+
 export class Server {
 
     app: any;
@@ -127,7 +148,7 @@ export class Server {
             updateSource: source
         };
 
-        this.signalHumanTask(instanceId, 'Update%20Information', error => {
+        signalHumanTask(instanceId, 'Update%20Information', error => {
             if (!error) {
                 this.listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
                     if (!error) {
@@ -483,7 +504,7 @@ export class Server {
             updateSource: body.messageSource
         };
 
-        this.signalHumanTask(instanceId, 'Update%20Information', error => {
+        signalHumanTask(instanceId, 'Update%20Information', error => {
             if (!error) {
                 this.listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
                     if (!error) {
@@ -514,7 +535,7 @@ export class Server {
         let complete = req.params.complete;
         let updateInfo = { completed: complete };
 
-        this.signalHumanTask(instanceId, 'Perform%20Remediation', error => {
+        signalHumanTask(instanceId, 'Perform%20Remediation', error => {
             if (!error) {
                 this.listReadyTasks(instanceId, 'Perform Remediation', (error, taskId) => {
                     if (!error) {
@@ -534,27 +555,6 @@ export class Server {
             } else {
                 let msg = 'Unable to signal for human task, error: ' + error;
                 res.json(msg);
-            }
-        });
-    }
-
-    private signalHumanTask(instanceId, type, cb) {
-        console.log('app signalHumanTask');
-        let options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/processes/instances/signal/' + type + '?instanceId=' + instanceId,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'POST'
-        };
-
-        request(options, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
-                cb(null);
-            } else {
-                cb(error);
             }
         });
     }
