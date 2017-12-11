@@ -90,6 +90,28 @@ let listReadyTasks = (instanceId, type, cb) => {
     });
 }
 
+let updateInformation = (taskId, updateInfo, cb) => {
+    console.log('app updateInformation');
+    let options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'PUT',
+        json: updateInfo
+    };
+
+    request(options, (error, response, body) => {
+        if (!error && response.statusCode == 201) {
+            cb(null);
+        } else {
+            cb(error);
+        }
+    });
+}
+
 export class Server {
 
     app: any;
@@ -174,7 +196,7 @@ export class Server {
             if (!error) {
                 listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
                     if (!error) {
-                        this.updateInformation(taskId, updateInfo, error => {
+                        updateInformation(taskId, updateInfo, error => {
                             if (!error) {
                                 cb(null, 'SUCCESS');
                             } else {
@@ -530,7 +552,7 @@ export class Server {
             if (!error) {
                 listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
                     if (!error) {
-                        this.updateInformation(taskId, updateInfo, error => {
+                        updateInformation(taskId, updateInfo, error => {
                             if (!error) {
                                 res.json('SUCCESS');
                             } else {
@@ -561,7 +583,7 @@ export class Server {
             if (!error) {
                 listReadyTasks(instanceId, 'Perform Remediation', (error, taskId) => {
                     if (!error) {
-                        this.updateInformation(taskId, updateInfo, error => {
+                        updateInformation(taskId, updateInfo, error => {
                             if (!error) {
                                 res.json('SUCCESS');
                             } else {
@@ -577,28 +599,6 @@ export class Server {
             } else {
                 let msg = 'Unable to signal for human task, error: ' + error;
                 res.json(msg);
-            }
-        });
-    }
-
-    private updateInformation(taskId, updateInfo, cb) {
-        console.log('app updateInformation');
-        let options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'PUT',
-            json: updateInfo
-        };
-
-        request(options, (error, response, body) => {
-            if (!error && response.statusCode == 201) {
-                cb(null);
-            } else {
-                cb(error);
             }
         });
     }

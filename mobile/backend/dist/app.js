@@ -87,6 +87,27 @@ var listReadyTasks = function (instanceId, type, cb) {
         }
     });
 };
+var updateInformation = function (taskId, updateInfo, cb) {
+    console.log('app updateInformation');
+    var options = {
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': BASIC_AUTH
+        },
+        method: 'PUT',
+        json: updateInfo
+    };
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 201) {
+            cb(null);
+        }
+        else {
+            cb(error);
+        }
+    });
+};
 var Server = (function () {
     function Server() {
         console.log('Inside app constructor');
@@ -148,7 +169,6 @@ var Server = (function () {
         });
     };
     Server.prototype.processAddPhoto = function (instanceId, fileName, source, cb) {
-        var _this = this;
         console.log('app processAddPhoto');
         var updateInfo = {
             photoId: fileName,
@@ -158,7 +178,7 @@ var Server = (function () {
             if (!error) {
                 listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
                     if (!error) {
-                        _this.updateInformation(taskId, updateInfo, function (error) {
+                        updateInformation(taskId, updateInfo, function (error) {
                             if (!error) {
                                 cb(null, 'SUCCESS');
                             }
@@ -495,7 +515,6 @@ var Server = (function () {
         });
     };
     Server.prototype.addComment = function (req, res) {
-        var _this = this;
         console.log('app addComment');
         var body = req.body;
         var instanceId = req.params.instanceId;
@@ -507,7 +526,7 @@ var Server = (function () {
             if (!error) {
                 listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
                     if (!error) {
-                        _this.updateInformation(taskId, updateInfo, function (error) {
+                        updateInformation(taskId, updateInfo, function (error) {
                             if (!error) {
                                 res.json('SUCCESS');
                             }
@@ -530,7 +549,6 @@ var Server = (function () {
         });
     };
     Server.prototype.performRemediation = function (req, res) {
-        var _this = this;
         console.log('app performRemediation');
         var body = req.body;
         var instanceId = req.params.instanceId;
@@ -540,7 +558,7 @@ var Server = (function () {
             if (!error) {
                 listReadyTasks(instanceId, 'Perform Remediation', function (error, taskId) {
                     if (!error) {
-                        _this.updateInformation(taskId, updateInfo, function (error) {
+                        updateInformation(taskId, updateInfo, function (error) {
                             if (!error) {
                                 res.json('SUCCESS');
                             }
@@ -559,27 +577,6 @@ var Server = (function () {
             else {
                 var msg = 'Unable to signal for human task, error: ' + error;
                 res.json(msg);
-            }
-        });
-    };
-    Server.prototype.updateInformation = function (taskId, updateInfo, cb) {
-        console.log('app updateInformation');
-        var options = {
-            url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': BASIC_AUTH
-            },
-            method: 'PUT',
-            json: updateInfo
-        };
-        request(options, function (error, response, body) {
-            if (!error && response.statusCode == 201) {
-                cb(null);
-            }
-            else {
-                cb(error);
             }
         });
     };
