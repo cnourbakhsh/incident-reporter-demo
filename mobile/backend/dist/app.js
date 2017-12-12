@@ -66,10 +66,11 @@ var listReadyTasks = function (instanceId, type, cb) {
         method: 'GET'
     };
     request(options, function (error, response, body) {
-        console.log('cnourbakhsh ', body);
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
+            console.log(data);
             var tasks = data['task-summary'];
+            console.log(tasks);
             if (tasks != undefined) {
                 for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
                     var task = tasks_1[_i];
