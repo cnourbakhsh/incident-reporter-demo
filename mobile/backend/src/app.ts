@@ -74,10 +74,10 @@ let listReadyTasks = (instanceId, type, cb) => {
         //console.log('cnourbakhsh ', body);
         if (!error && response.statusCode == 200) {
             let data = JSON.parse(body);
-            console.log(data);
+            //console.log(data);
             let tasks = data['task-summary'];
-            console.log(tasks);
-            if (tasks != undefined) {
+            //console.log(tasks);
+            if (tasks) {
                 for (let task of tasks) {
                     if (task['task-name'] === type && task['task-name'] === 'Ready') {
                         console.log('cnourbakhsh ' task['task-id']);
