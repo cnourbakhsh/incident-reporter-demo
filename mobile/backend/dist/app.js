@@ -189,7 +189,7 @@ var Server = (function () {
                         });
                     }
                     else {
-                        var msg = 'Unable to list ready tasks, error: ' + error;
+                        var msg = '0 Unable to list ready tasks, error: ' + error;
                         cb(msg);
                     }
                 });
@@ -537,7 +537,7 @@ var Server = (function () {
                         });
                     }
                     else {
-                        var msg = 'Unable to list ready tasks, error: ' + error;
+                        var msg = '1 Unable to list ready tasks, error: ' + error;
                         res.json(msg);
                     }
                 });
@@ -569,7 +569,7 @@ var Server = (function () {
                         });
                     }
                     else {
-                        var msg = 'Unable to list ready tasks, error: ' + error;
+                        var msg = '2 Unable to list ready tasks, error: ' + error;
                         res.json(msg);
                     }
                 });

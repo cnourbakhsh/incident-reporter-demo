@@ -205,7 +205,7 @@ export class Server {
                             }
                         });
                     } else {
-                        let msg = 'Unable to list ready tasks, error: ' + error;
+                        let msg = '0 Unable to list ready tasks, error: ' + error;
                         cb(msg);
                     }
                 });
@@ -561,7 +561,7 @@ export class Server {
                             }
                         });
                     } else {
-                        let msg = 'Unable to list ready tasks, error: ' + error;
+                        let msg = '1 Unable to list ready tasks, error: ' + error;
                         res.json(msg);
                     }
                 });
@@ -592,7 +592,7 @@ export class Server {
                             }
                         });
                     } else {
-                        let msg = 'Unable to list ready tasks, error: ' + error;
+                        let msg = '2 Unable to list ready tasks, error: ' + error;
                         res.json(msg);
                     }
                 });
