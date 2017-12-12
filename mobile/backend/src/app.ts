@@ -79,8 +79,8 @@ let listReadyTasks = (instanceId, type, cb) => {
             //console.log(tasks);
             if (tasks) {
                 for (let task of tasks) {
-                    if (task['task-name'] === type && task['task-name'] === 'Ready') {
-                        console.log('cnourbakhsh ' task['task-id']);
+                    if (task['task-name'] === type && task['task-status'] === 'Ready') {
+                        console.log('cnourbakhsh ', task['task-id']);
                         return cb(null, task['task-id']);
                     }
                 }
