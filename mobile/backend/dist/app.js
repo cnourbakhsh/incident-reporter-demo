@@ -74,6 +74,7 @@ var listReadyTasks = function (instanceId, type, cb) {
                 for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
                     var task = tasks_1[_i];
                     if (task['task-name'] === type && task['task-name'] === 'Ready') {
+                        console.log('cnourbakhsh ', task['task-id']);
                         return cb(null, task['task-id']);
                     }
                 }

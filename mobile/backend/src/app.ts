@@ -78,6 +78,7 @@ let listReadyTasks = (instanceId, type, cb) => {
             if (tasks != undefined) {
                 for (let task of tasks) {
                     if (task['task-name'] === type && task['task-name'] === 'Ready') {
+                        console.log('cnourbakhsh ' task['task-id']);
                         return cb(null, task['task-id']);
                     }
                 }
