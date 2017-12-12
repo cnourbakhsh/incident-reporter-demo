@@ -90,6 +90,7 @@ var listReadyTasks = function (instanceId, type, cb) {
 };
 var updateInformation = function (taskId, updateInfo, cb) {
     console.log('app updateInformation');
+    console.log(updateInfo);
     var options = {
         url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
         headers: {
