@@ -66,6 +66,7 @@ var listReadyTasks = function (instanceId, type, cb) {
         method: 'GET'
     };
     request(options, function (error, response, body) {
+        console.log('cnourbakhsh ', body);
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
             var tasks = data['task-summary'];

@@ -71,6 +71,7 @@ let listReadyTasks = (instanceId, type, cb) => {
     };
 
     request(options, (error, response, body) => {
+        console.log('cnourbakhsh ', body);
         if (!error && response.statusCode == 200) {
             let data = JSON.parse(body);
             let tasks = data['task-summary'];
