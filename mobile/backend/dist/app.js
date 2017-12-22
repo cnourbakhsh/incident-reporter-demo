@@ -6,13 +6,16 @@ var bodyParser = require("body-parser");
 var request = require("request");
 var multer = require("multer");
 var fs = require("fs");
-var PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'localhost:8080';
-var DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'localhost:8080';
-var SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'localhost:8080';
-var PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || 'ProcessContainer';
-var DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || 'DecisionContainer';
+var uuid = require("uuid/v1");
+var querystring_1 = require("querystring");
+var PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'process-server-incident-demo.192.168.99.100.nip.io';
+var DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'decision-server-incident-demo.192.168.99.100.nip.io';
+var SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'services-server-incident-demo.192.168.99.100.nip.io' + '/' + 'services-0.0.1-SNAPSHOT';
+var PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || '1776e960572610314f3f813a5dbb736d';
+var DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || '4c1342a8827bf46033cb95f0bdf27f0b';
 var BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
 var REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
+var uuidv1 = require('uuid/v1');
 var loadClaimDetails = function (process, cb) {
     console.log('app loadClaimDetails');
     var instanceId = process['process-instance-id'];
@@ -73,7 +76,6 @@ var listReadyTasks = function (instanceId, type, cb) {
                 for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
                     var task = tasks_1[_i];
                     if (task['task-name'] === type && task['task-status'] === 'Ready') {
-                        console.log('cnourbakhsh ', task['task-id']);
                         return cb(null, task['task-id']);
                     }
                 }
@@ -90,10 +92,8 @@ var listReadyTasks = function (instanceId, type, cb) {
 };
 var updateInformation = function (taskId, updateInfo, cb) {
     console.log('app updateInformation');
-    console.log('taskId ', taskId);
-    console.log(updateInfo);
     var options = {
-        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?user=dummy&auto-progress=true',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -103,11 +103,43 @@ var updateInformation = function (taskId, updateInfo, cb) {
         json: updateInfo
     };
     request(options, function (error, response, body) {
-        if (!error && response.statusCode == 201) {
-            cb(null);
+        if (response.statusCode != 201) {
+            cb(new Error('Unsuccesful process task update, error: ' + response.body));
         }
         else {
-            cb(error);
+            cb(null);
+        }
+    });
+};
+var processAddPhoto = function (instanceId, fileName, source, cb) {
+    console.log('app processAddPhoto');
+    var updateInfo = {
+        photoId: fileName,
+        updateSource: source
+    };
+    signalHumanTask(instanceId, 'Update%20Information', function (error) {
+        if (!error) {
+            listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
+                if (!error) {
+                    updateInformation(taskId, updateInfo, function (error) {
+                        if (!error) {
+                            cb(null, 'SUCCESS');
+                        }
+                        else {
+                            var msg = 'Unable to add photo, error: ' + error;
+                            cb(msg);
+                        }
+                    });
+                }
+                else {
+                    var msg = '0 Unable to list ready tasks, error: ' + error;
+                    cb(msg);
+                }
+            });
+        }
+        else {
+            var msg = 'Unable to signal for human task, error: ' + error;
+            cb(msg);
         }
     });
 };
@@ -118,7 +150,8 @@ var Server = (function () {
         this.app.use(cors());
         this.port = +process.env.OPENSHIFT_NODEJS_PORT || 7001;
         this.host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
-        this.upload = multer({ dest: 'uploads/' });
+        var storage = multer.memoryStorage();
+        this.upload = multer({ storage: storage });
         this.jsonParser = bodyParser.json();
         this.routes();
     }
@@ -137,9 +170,54 @@ var Server = (function () {
         this.app.post('/api/v1/bpms/customer-incident', this.jsonParser, this.createIncident);
         this.app.post('/api/v1/bpms/update-questions', this.jsonParser, this.updateQuestions);
         this.app.post('/api/v1/bpms/upload-photo/:instanceId/:fileName/:messageSource', this.upload.single('file'), this.claimAddPhoto);
+        this.app.post('/api/v1/bpms/accept-base64-image/:instanceId/:fileName/:messageSource', bodyParser.text({ type: 'text/plain', limit: '100000000' }), this.acceptBase64Image);
+    };
+    Server.prototype.acceptBase64Image = function (req, res) {
+        console.log('app acceptBase64Image');
+        var data = req.body;
+        data = querystring_1.unescape(data).substr(1);
+        data = data.replace(/^data:image\/jpeg;base64,/, '');
+        var filename = uuid();
+        var instanceId = req.params.instanceId;
+        var updateSource = req.params.messageSource;
+        fs.writeFile('./dist/photos/' + filename + '.jpg', data, { encoding: 'base64', flag: 'w' }, function (error) {
+            if (error) {
+                console.error(error);
+            }
+            else {
+                var options = {
+                    url: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId,
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    method: 'POST'
+                };
+                var filePost = request(options, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        processAddPhoto(instanceId, filename, updateSource, function () {
+                            var photoURL = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
+                            return res.send(201, photoURL);
+                        });
+                        fs.unlink('./dist/photos/' + filename + '.jpg', function (err) {
+                            console.error(err);
+                        });
+                    }
+                    else if (error) {
+                        res.json(error);
+                    }
+                    else {
+                        res.json(body);
+                    }
+                });
+                var form = filePost.form();
+                form.append('file', fs.createReadStream('./dist/photos/' + filename + '.jpg'), {
+                    filename: filename,
+                    contentType: 'image/jpeg'
+                });
+            }
+        });
     };
     Server.prototype.claimAddPhoto = function (req, res) {
-        var _this = this;
         console.log('app claimAddPhoto');
         var fileName = req.file.originalname;
         var instanceId = req.params.instanceId;
@@ -154,7 +232,7 @@ var Server = (function () {
         var filePost = request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var data = JSON.parse(body);
-                _this.processAddPhoto(instanceId, fileName, updateSource, function () {
+                processAddPhoto(instanceId, fileName, updateSource, function () {
                     return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
             }
@@ -169,38 +247,6 @@ var Server = (function () {
         form.append('file', fs.createReadStream(req.file.path), {
             filename: fileName,
             contentType: req.file.mimetype
-        });
-    };
-    Server.prototype.processAddPhoto = function (instanceId, fileName, source, cb) {
-        console.log('app processAddPhoto');
-        var updateInfo = {
-            photoId: fileName,
-            updateSource: source
-        };
-        signalHumanTask(instanceId, 'Update%20Information', function (error) {
-            if (!error) {
-                listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
-                    if (!error) {
-                        updateInformation(taskId, updateInfo, function (error) {
-                            if (!error) {
-                                cb(null, 'SUCCESS');
-                            }
-                            else {
-                                var msg = 'Unable to add photo, error: ' + error;
-                                cb(msg);
-                            }
-                        });
-                    }
-                    else {
-                        var msg = '0 Unable to list ready tasks, error: ' + error;
-                        cb(msg);
-                    }
-                });
-            }
-            else {
-                var msg = 'Unable to signal for human task, error: ' + error;
-                cb(msg);
-            }
         });
     };
     Server.prototype.createIncident = function (req, res) {
@@ -530,6 +576,7 @@ var Server = (function () {
                 listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
                     if (!error) {
                         updateInformation(taskId, updateInfo, function (error) {
+                            console.log('after updateInformation taskId: ', taskId);
                             if (!error) {
                                 res.json('SUCCESS');
                             }
@@ -540,7 +587,7 @@ var Server = (function () {
                         });
                     }
                     else {
-                        var msg = '1 Unable to list ready tasks, error: ' + error;
+                        var msg = 'Unable to list ready tasks, error: ' + error;
                         res.json(msg);
                     }
                 });

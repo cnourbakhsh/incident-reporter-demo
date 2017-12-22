@@ -2,18 +2,20 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import * as request from 'request';
-import * as http from 'http';
 import * as multer from 'multer';
 import * as fs from 'fs';
+import * as uuid from 'uuid/v1';
+import { unescape } from 'querystring';
 
 // Must place this variables here due to this scoping issues
-let PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'localhost:8080';
-let DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'localhost:8080';
-let SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'localhost:8080';
-let PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || 'ProcessContainer';
-let DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || 'DecisionContainer';
+let PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'process-server-incident-demo.192.168.99.100.nip.io';
+let DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'decision-server-incident-demo.192.168.99.100.nip.io';
+let SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST || 'services-server-incident-demo.192.168.99.100.nip.io' + '/' + 'services-0.0.1-SNAPSHOT';
+let PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || '1776e960572610314f3f813a5dbb736d';
+let DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || '4c1342a8827bf46033cb95f0bdf27f0b';
 let BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
 let REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
+let uuidv1 = require('uuid/v1');
 
 let loadClaimDetails = (process, cb) => {
     console.log('app loadClaimDetails');
@@ -71,16 +73,12 @@ let listReadyTasks = (instanceId, type, cb) => {
     };
 
     request(options, (error, response, body) => {
-        //console.log('cnourbakhsh ', body);
         if (!error && response.statusCode == 200) {
             let data = JSON.parse(body);
-            //console.log(data);
             let tasks = data['task-summary'];
-            //console.log(tasks);
             if (tasks) {
                 for (let task of tasks) {
                     if (task['task-name'] === type && task['task-status'] === 'Ready') {
-                        console.log('cnourbakhsh ', task['task-id']);
                         return cb(null, task['task-id']);
                     }
                 }
@@ -96,10 +94,9 @@ let listReadyTasks = (instanceId, type, cb) => {
 
 let updateInformation = (taskId, updateInfo, cb) => {
     console.log('app updateInformation');
-    console.log('taskId ', taskId);
-    console.log(updateInfo);
+    //updateInfo.id = taskId;
     let options = {
-        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?auto-progress=true',
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + PROCESS_CONTAINER_ID + '/tasks/' + taskId + '/states/completed?user=dummy&auto-progress=true',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -110,10 +107,41 @@ let updateInformation = (taskId, updateInfo, cb) => {
     };
 
     request(options, (error, response, body) => {
-        if (!error && response.statusCode == 201) {
-            cb(null);
+        if (response.statusCode != 201) {
+            cb(new Error('Unsuccesful process task update, error: ' + response.body));
         } else {
-            cb(error);
+            cb(null);
+        }
+    });
+}
+
+let processAddPhoto = function (instanceId, fileName, source, cb) {
+    console.log('app processAddPhoto');
+    let updateInfo = {
+        photoId: fileName,
+        updateSource: source
+    };
+
+    signalHumanTask(instanceId, 'Update%20Information', error => {
+        if (!error) {
+            listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
+                if (!error) {
+                    updateInformation(taskId, updateInfo, error => {
+                        if (!error) {
+                            cb(null, 'SUCCESS');
+                        } else {
+                            let msg = 'Unable to add photo, error: ' + error;
+                            cb(msg);
+                        }
+                    });
+                } else {
+                    let msg = '0 Unable to list ready tasks, error: ' + error;
+                    cb(msg);
+                }
+            });
+        } else {
+            let msg = 'Unable to signal for human task, error: ' + error;
+            cb(msg);
         }
     });
 }
@@ -135,7 +163,9 @@ export class Server {
         this.port = +<string>process.env.OPENSHIFT_NODEJS_PORT || 7001;
         this.host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
-        this.upload = multer({ dest: 'uploads/' });
+        let storage = multer.memoryStorage();
+        this.upload = multer({ storage: storage });
+        //this.upload = multer({ dest: 'uploads/' });
         this.jsonParser = bodyParser.json();
         this.routes();
     }
@@ -155,6 +185,53 @@ export class Server {
         this.app.post('/api/v1/bpms/customer-incident', this.jsonParser, this.createIncident);
         this.app.post('/api/v1/bpms/update-questions', this.jsonParser, this.updateQuestions);
         this.app.post('/api/v1/bpms/upload-photo/:instanceId/:fileName/:messageSource', this.upload.single('file'), this.claimAddPhoto);
+        this.app.post('/api/v1/bpms/accept-base64-image/:instanceId/:fileName/:messageSource', bodyParser.text({ type: 'text/plain', limit: '100000000' }), this.acceptBase64Image);
+    }
+
+    private acceptBase64Image(req, res) {
+        console.log('app acceptBase64Image');
+
+        let data: string = req.body;
+        data = unescape(data).substr(1);
+        data = data.replace(/^data:image\/jpeg;base64,/, '');
+        let filename = uuid();
+        let instanceId = req.params.instanceId;
+        let updateSource = req.params.messageSource;
+        fs.writeFile('./dist/photos/' + filename + '.jpg', data, { encoding: 'base64', flag: 'w' }, error => {
+            if (error) {
+                console.error(error);
+            } else {
+                let options = {
+                    url: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId,
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    method: 'POST'
+                };
+
+                let filePost = request(options, (error, response, body) => {
+                    if (!error && response.statusCode == 200) {
+                        processAddPhoto(instanceId, filename, updateSource, function () {
+                            let photoURL: string = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
+                            return res.send(201, photoURL);
+                        });
+                        fs.unlink('./dist/photos/' + filename + '.jpg', err => {
+                            console.error(err);
+                        });
+                    } else if (error) {
+                        res.json(error);
+                    } else {
+                        res.json(body);
+                    }
+                });
+
+                let form = filePost.form();
+                form.append('file', fs.createReadStream('./dist/photos/' + filename + '.jpg'), {
+                    filename: filename,
+                    contentType: 'image/jpeg'
+                });
+            }
+        });
     }
 
     private claimAddPhoto(req, res) {
@@ -174,7 +251,7 @@ export class Server {
         let filePost = request(options, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 let data = JSON.parse(body);
-                this.processAddPhoto(instanceId, fileName, updateSource, function () {
+                processAddPhoto(instanceId, fileName, updateSource, function () {
                     return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
             } else if (error) {
@@ -188,37 +265,6 @@ export class Server {
         form.append('file', fs.createReadStream(req.file.path), {
             filename: fileName,
             contentType: req.file.mimetype
-        });
-    }
-
-    private processAddPhoto(instanceId, fileName, source, cb) {
-        console.log('app processAddPhoto');
-        let updateInfo = {
-            photoId: fileName,
-            updateSource: source
-        };
-
-        signalHumanTask(instanceId, 'Update%20Information', error => {
-            if (!error) {
-                listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
-                    if (!error) {
-                        updateInformation(taskId, updateInfo, error => {
-                            if (!error) {
-                                cb(null, 'SUCCESS');
-                            } else {
-                                let msg = 'Unable to add photo, error: ' + error;
-                                cb(msg);
-                            }
-                        });
-                    } else {
-                        let msg = '0 Unable to list ready tasks, error: ' + error;
-                        cb(msg);
-                    }
-                });
-            } else {
-                let msg = 'Unable to signal for human task, error: ' + error;
-                cb(msg);
-            }
         });
     }
 
@@ -547,6 +593,7 @@ export class Server {
 
     private addComment(req, res) {
         console.log('app addComment');
+
         let body = req.body;
         let instanceId = req.params.instanceId;
         let updateInfo = {
@@ -559,6 +606,7 @@ export class Server {
                 listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
                     if (!error) {
                         updateInformation(taskId, updateInfo, error => {
+                            console.log('after updateInformation taskId: ', taskId);
                             if (!error) {
                                 res.json('SUCCESS');
                             } else {
@@ -567,7 +615,7 @@ export class Server {
                             }
                         });
                     } else {
-                        let msg = '1 Unable to list ready tasks, error: ' + error;
+                        let msg = 'Unable to list ready tasks, error: ' + error;
                         res.json(msg);
                     }
                 });

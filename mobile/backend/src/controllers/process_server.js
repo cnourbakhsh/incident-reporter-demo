@@ -55,7 +55,7 @@ exports.getExistingClaims = function (req, res) {
 function loadClaimDetails(process, cb) {
     let instanceId = process[['process-instance-id']];
     let options = {
-        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + CONTAINER_ID + '/processes/instances/' + instanceId + '/letiables',
+        url: 'http://' + PROCESS_SERVER_HOST + '/kie-server/services/rest/server/containers/' + CONTAINER_ID + '/processes/instances/' + instanceId + '/variables',
         headers: {
             'Accept': 'application/json',
             'Authorization': BASIC_AUTH
