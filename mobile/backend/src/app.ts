@@ -171,6 +171,11 @@ export class Server {
     }
 
     start() {
+        fs.mkdir('dist/photos', err => {
+            if (err && err.code && err.code !== 'EEXIST') {
+                console.error(err);
+            }
+        });
         this.app.listen(this.port, this.host, () => {
             console.log('App started at: ' + new Date() + ' on port: ' + this.port);
         });
@@ -213,7 +218,7 @@ export class Server {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
                             let photoURL: string = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
-                            return res.send(201, photoURL);
+                            return res.status(201).send(photoURL);
                         });
                         fs.unlink('./dist/photos/' + filename + '.jpg', err => {
                             console.error(err);

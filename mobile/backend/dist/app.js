@@ -157,6 +157,11 @@ var Server = (function () {
     }
     Server.prototype.start = function () {
         var _this = this;
+        fs.mkdir('dist/photos', function (err) {
+            if (err && err.code && err.code !== 'EEXIST') {
+                console.error(err);
+            }
+        });
         this.app.listen(this.port, this.host, function () {
             console.log('App started at: ' + new Date() + ' on port: ' + _this.port);
         });
@@ -196,7 +201,7 @@ var Server = (function () {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
                             var photoURL = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
-                            return res.send(201, photoURL);
+                            return res.status(201).send(photoURL);
                         });
                         fs.unlink('./dist/photos/' + filename + '.jpg', function (err) {
                             console.error(err);
