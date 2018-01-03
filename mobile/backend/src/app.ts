@@ -131,16 +131,19 @@ let processAddPhoto = function (instanceId, fileName, source, cb) {
                             cb(null, 'SUCCESS');
                         } else {
                             let msg = 'Unable to add photo, error: ' + error;
+                            console.error(error);
                             cb(msg);
                         }
                     });
                 } else {
                     let msg = '0 Unable to list ready tasks, error: ' + error;
+                    console.error(error);
                     cb(msg);
                 }
             });
         } else {
             let msg = 'Unable to signal for human task, error: ' + error;
+            console.error(error);
             cb(msg);
         }
     });
@@ -220,9 +223,9 @@ export class Server {
                             let photoURL: string = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
                             return res.status(201).send(photoURL);
                         });
-                        //fs.unlink('./dist/photos/' + filename + '.jpg', err => {
-                        //    console.error(err);
-                        //});
+                        fs.unlink('./dist/photos/' + filename + '.jpg', err => {
+                            console.error(err);
+                        });
                     } else if (error) {
                         console.error(error);
                         res.json(error);
