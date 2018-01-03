@@ -227,6 +227,7 @@ export class Server {
                         console.error(error);
                         res.json(error);
                     } else {
+                        console.log(body);
                         res.json(body);
                     }
                 });

@@ -209,6 +209,7 @@ var Server = (function () {
                         res.json(error);
                     }
                     else {
+                        console.log(body);
                         res.json(body);
                     }
                 });
