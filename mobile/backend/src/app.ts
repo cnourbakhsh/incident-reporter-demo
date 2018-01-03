@@ -172,7 +172,9 @@ export class Server {
 
     start() {
         fs.mkdir('./dist/photos', err => {
-            console.error(err);
+            if (err) {
+                console.error(err);
+            }
         });
         this.app.listen(this.port, this.host, () => {
             console.log('App started at: ' + new Date() + ' on port: ' + this.port);
