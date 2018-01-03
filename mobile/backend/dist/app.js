@@ -208,6 +208,7 @@ var Server = (function () {
                         });
                     }
                     else if (error) {
+                        console.error(error);
                         res.json(error);
                     }
                     else {
