@@ -203,9 +203,6 @@ var Server = (function () {
                             var photoURL = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
                             return res.status(201).send(photoURL);
                         });
-                        fs.unlink('./dist/photos/' + filename + '.jpg', function (err) {
-                            console.error(err);
-                        });
                     }
                     else if (error) {
                         console.error(error);
