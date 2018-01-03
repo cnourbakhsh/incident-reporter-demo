@@ -157,10 +157,8 @@ var Server = (function () {
     }
     Server.prototype.start = function () {
         var _this = this;
-        fs.mkdir('dist/photos', function (err) {
-            if (err && err.code && err.code !== 'EEXIST') {
-                console.error(err);
-            }
+        fs.mkdir('./dist/photos', function (err) {
+            console.error(err);
         });
         this.app.listen(this.port, this.host, function () {
             console.log('App started at: ' + new Date() + ' on port: ' + _this.port);

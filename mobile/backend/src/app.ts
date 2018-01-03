@@ -171,10 +171,8 @@ export class Server {
     }
 
     start() {
-        fs.mkdir('dist/photos', err => {
-            if (err && err.code && err.code !== 'EEXIST') {
-                console.error(err);
-            }
+        fs.mkdir('./dist/photos', err => {
+            console.error(err);
         });
         this.app.listen(this.port, this.host, () => {
             console.log('App started at: ' + new Date() + ' on port: ' + this.port);
