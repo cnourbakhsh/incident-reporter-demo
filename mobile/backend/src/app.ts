@@ -220,7 +220,7 @@ export class Server {
                 let filePost = request(options, (error, response, body) => {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
-                            let photoURL: string = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/photos/' + instanceId + '/' + filename;
+                            let photoURL: string = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + instanceId + '/' + filename;
                             return res.status(201).send(photoURL);
                         });
                         fs.unlink('./dist/photos/' + filename + '.jpg', err => {
@@ -489,7 +489,7 @@ export class Server {
                                     claim.photos = [];
                                     if (claim.incidentPhotoIds && claim.incidentPhotoIds.length > 0) {
                                         for (let p of claim.incidentPhotoIds) {
-                                            let link = 'http://' + SERVICES_SERVER_HOST + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
+                                            let link = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
                                             claim.photos.push(link);
                                         }
                                     }
