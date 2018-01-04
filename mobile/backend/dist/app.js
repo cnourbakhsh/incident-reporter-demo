@@ -203,7 +203,7 @@ var Server = (function () {
                 var filePost = request(options, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
-                            var photoURL = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
+                            var photoURL = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/photos/' + instanceId + '/' + filename;
                             return res.status(201).send(photoURL);
                         });
                         fs.unlink('./dist/photos/' + filename + '.jpg', function (err) {

@@ -220,7 +220,7 @@ export class Server {
                 let filePost = request(options, (error, response, body) => {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
-                            let photoURL: string = 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
+                            let photoURL: string = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/photos/' + instanceId + '/' + filename;
                             return res.status(201).send(photoURL);
                         });
                         fs.unlink('./dist/photos/' + filename + '.jpg', err => {
