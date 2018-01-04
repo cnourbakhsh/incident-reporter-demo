@@ -221,6 +221,7 @@ export class Server {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
                             let photoURL: string = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + instanceId + '/' + filename;
+                            console.log(photoURL);
                             return res.status(201).send(photoURL);
                         });
                         fs.unlink('./dist/photos/' + filename + '.jpg', err => {
@@ -490,6 +491,7 @@ export class Server {
                                     if (claim.incidentPhotoIds && claim.incidentPhotoIds.length > 0) {
                                         for (let p of claim.incidentPhotoIds) {
                                             let link = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
+                                            console.log(link);
                                             claim.photos.push(link);
                                         }
                                     }

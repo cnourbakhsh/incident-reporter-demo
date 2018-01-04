@@ -204,6 +204,7 @@ var Server = (function () {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
                             var photoURL = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + instanceId + '/' + filename;
+                            console.log(photoURL);
                             return res.status(201).send(photoURL);
                         });
                         fs.unlink('./dist/photos/' + filename + '.jpg', function (err) {
@@ -469,6 +470,7 @@ var Server = (function () {
                                         for (var _i = 0, _a = claim.incidentPhotoIds; _i < _a.length; _i++) {
                                             var p = _a[_i];
                                             var link = 'http://' + 'services-server-incident-demo.192.168.1.157.nip.io' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
+                                            console.log(link);
                                             claim.photos.push(link);
                                         }
                                     }
