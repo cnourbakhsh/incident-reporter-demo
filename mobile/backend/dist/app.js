@@ -11,7 +11,7 @@ var querystring_1 = require("querystring");
 var PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'process-server-incident-demo.192.168.99.100.nip.io';
 var DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'decision-server-incident-demo.192.168.99.100.nip.io';
 var SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST + '/' + 'services-0.0.1-SNAPSHOT' || 'services-server-incident-demo.192.168.99.100.nip.io' + '/' + 'services-0.0.1-SNAPSHOT';
-var EXPOSED_SERVICES_SERVER_HOST = 'services-server-incident-demo.192.168.61.106.nip.io:8080' + '/' + 'services-0.0.1-SNAPSHOT';
+var EXPOSED_SERVICES_SERVER_HOST = 'services-server-incident-demo.192.168.61.120.nip.io:8080' + '/' + 'services-0.0.1-SNAPSHOT';
 var PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || '1776e960572610314f3f813a5dbb736d';
 var DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || '4c1342a8827bf46033cb95f0bdf27f0b';
 var BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
