@@ -179,7 +179,7 @@ var Server = (function () {
         this.app.post('/api/v1/bpms/customer-incident', this.jsonParser, this.createIncident);
         this.app.post('/api/v1/bpms/update-questions', this.jsonParser, this.updateQuestions);
         this.app.post('/api/v1/bpms/upload-photo/:instanceId/:fileName/:messageSource', this.upload.single('file'), this.claimAddPhoto);
-        this.app.post('/api/v1/bpms/accept-base64-image/:instanceId/:fileName/:messageSource', bodyParser.text({ type: 'text/plain', limit: '100000000' }), this.acceptBase64Image);
+        this.app.post('/api/v1/bpms/accept-base64-image/:instanceId/:fileName/:messageSource', bodyParser.text({ type: 'text/plain', limit: '1000000000' }), this.acceptBase64Image);
     };
     Server.prototype.acceptBase64Image = function (req, res) {
         console.log('app acceptBase64Image');
