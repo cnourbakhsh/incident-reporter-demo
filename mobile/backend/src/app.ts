@@ -11,6 +11,7 @@ import { unescape } from 'querystring';
 let PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'process-server-incident-demo.192.168.99.100.nip.io';
 let DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'decision-server-incident-demo.192.168.99.100.nip.io';
 let SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST + '/' + 'services-0.0.1-SNAPSHOT' || 'services-server-incident-demo.192.168.99.100.nip.io' + '/' + 'services-0.0.1-SNAPSHOT';
+let EXPOSED_SERVICES_SERVER_HOST = 'services-server-incident-demo.192.168.61.106.nip.io:8080' + '/' + 'services-0.0.1-SNAPSHOT';
 let PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || '1776e960572610314f3f813a5dbb736d';
 let DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || '4c1342a8827bf46033cb95f0bdf27f0b';
 let BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
@@ -220,7 +221,7 @@ export class Server {
                 let filePost = request(options, (error, response, body) => {
                     if (!error && response.statusCode == 200) {
                         processAddPhoto(instanceId, filename, updateSource, function () {
-                            let photoURL: string = 'http://' + 'services-server-incident-demo.192.168.61.106.nip.io:8080' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + instanceId + '/' + filename;
+                            let photoURL: string = 'http://' + EXPOSED_SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + filename;
                             console.log(photoURL);
                             return res.status(201).send(photoURL);
                         });
@@ -490,7 +491,7 @@ export class Server {
                                     claim.photos = [];
                                     if (claim.incidentPhotoIds && claim.incidentPhotoIds.length > 0) {
                                         for (let p of claim.incidentPhotoIds) {
-                                            let link = 'http://' + 'services-server-incident-demo.192.168.61.106.nip.io:8080' + '/' + 'services-0.0.1-SNAPSHOT' + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
+                                            let link = 'http://' + EXPOSED_SERVICES_SERVER_HOST + '/photos/' + claim.processId + '/' + p.replace(/'/g, '');
                                             console.log(link);
                                             claim.photos.push(link);
                                         }
