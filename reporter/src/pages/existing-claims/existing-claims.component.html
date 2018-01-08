@@ -1,0 +1,57 @@
+<ion-header>
+    <ion-toolbar color="dark">
+        <ion-buttons start>
+            <button ion-button color="white" (click)='onHelp()'>
+                <ion-icon name="help-circle"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title>Reported Incidents</ion-title>
+        <ion-buttons end>
+            <button ion-button color="white" (click)='onNew()'>New</button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <div *ngIf="!claims || claims.length < 1">
+        <ion-card-header>
+            <ion-item>
+                <ion-icon name="alert"></ion-icon> There are no reported incidents!
+            </ion-item>
+        </ion-card-header>
+    </div>
+
+    <div class="incident-content-area" *ngIf="claims && claims.length > 0">
+        <ion-card *ngFor="let claim of claims | orderBy : '-processId'">
+            <ion-card-header>
+                {{claim.incident.incidentType}}
+                <button class="btn-sm" style="float: right" (click)="onLoadClaimDetails(claim)">
+                    <ion-icon name="arrow-dropright"></ion-icon>
+                </button>
+            </ion-card-header>
+            <div class="item item-text-wrap">
+                <ion-list>
+                    <ion-item>
+                        <strong>Process Id</strong>
+                        <br>{{claim.processId}}</ion-item>
+                    <ion-item>
+                        <strong>Date</strong>
+                        <br>{{claim.incident.incidentDate | date:'short'}}</ion-item>
+                    <ion-item>
+                        <strong>Status</strong>
+                        <br>
+                        <strong>{{claim.incidentStatus}}</strong>
+                        <ion-icon name="close-circled" *ngIf="claim.incidentStatus === 'COMPLETED'"></ion-icon>
+                        <ion-icon name="alert" *ngIf="claim.incidentStatus === 'IN_PROGRESS'"></ion-icon>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </ion-card>
+    </div>
+</ion-content>

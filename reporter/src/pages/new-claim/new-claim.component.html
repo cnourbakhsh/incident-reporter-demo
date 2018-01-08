@@ -1,0 +1,81 @@
+<ion-header>
+    <ion-toolbar color="dark">
+        <ion-buttons start>
+            <button *ngIf='showIncident' ion-button color="white" (click)='onClose();'>
+                <ion-icon name="close-circle"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title>New Incident</ion-title>
+        <ion-buttons end>
+            <button *ngIf='incident.type != null && showIncident' ion-button color="white" (click)='onSubmit()'>Submit</button>
+            <button *ngIf='loadQuestions' ion-button color="white" (click)='onFinish()'>Finish</button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="has-header">
+    <div *ngIf='showIncident'>
+        <ion-list>
+            <ion-item>
+                <ion-label>Incident Type</ion-label>
+                <ion-select [(ngModel)]="incident.type" interface="popover">
+                    <ion-option *ngFor="let type of incidentTypes">{{type}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Severity</ion-label>
+                <ion-select [(ngModel)]="incident.severity" interface="popover">
+                    <ion-option *ngFor="let severity of severities">{{severity}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Description</ion-label>
+                <ion-textarea [(ngModel)]="incident.description"></ion-textarea>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Incident Date</ion-label>
+                <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="incident.incidentDate"></ion-datetime>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Building Name</ion-label>
+                <ion-input [(ngModel)]="incident.buildingName"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>State</ion-label>
+                <ion-select [(ngModel)]="incident.stateCode" interface="popover">
+                    <ion-option *ngFor="let state of states">{{state}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Postal Code</ion-label>
+                <ion-input type="number" [(ngModel)]="incident.zipCode"></ion-input>
+            </ion-item>
+        </ion-list>
+    </div>
+    <div *ngIf="loadQuestions">
+        <ion-list>
+            <div *ngFor="let question of claim.questionnaire.questions">
+                <div *ngIf="question.answerType === 'INTEGER' || question.answerType === 'TEXT'">
+                    <ion-item>
+                        <ion-label floating>{{question.description}}</ion-label>
+                        <ion-input type="text" [(ngModel)]="answers[claim.questionnaire.questions.indexOf(question)]" (click)="updateAnswers()"></ion-input>
+                    </ion-item>
+                </div>
+                <div *ngIf="question.answerType === 'YES_NO'">
+                    <ion-item>
+                        <ion-label fixed>{{question.description}}</ion-label>
+                        <ion-checkbox [(ngModel)]="answers[claim.questionnaire.questions.indexOf(question)]" (click)="updateAnswers()"></ion-checkbox>
+                    </ion-item>
+                </div>
+                <div *ngIf="question.answerType === 'OPTION'">
+                    <ion-item>
+                        <ion-label fixed>{{question.description}}</ion-label>
+                        <ion-select [(ngModel)]="answers[claim.questionnaire.questions.indexOf(question)]" (click)="updateAnswers()" interface="popover">
+                            <ion-option *ngFor="let option of question.options">{{option}}</ion-option>
+                        </ion-select>
+                    </ion-item>
+                </div>
+            </div>
+        </ion-list>
+    </div>
+</ion-content>

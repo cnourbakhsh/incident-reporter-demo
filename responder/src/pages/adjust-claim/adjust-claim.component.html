@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-toolbar color="danger">
+        <ion-buttons>
+            <button ion-button color="white" (click)='onClose()'>
+                <ion-icon name="close-circle"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title>Close Ticket</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="has-footer">
+    <ion-list>
+        <ion-item>
+            <strong>Process Id</strong>
+            <br>{{claim.processId}}
+        </ion-item>
+        <ion-item>
+            <strong>Type: </strong>{{claim.incident.incidentType}}
+        </ion-item>
+        <ion-item>
+            <strong>Severity: </strong>{{claim.incident.severity}}
+        </ion-item>
+        <ion-item>
+            <strong>Description</strong>
+            <div>
+                {{claim.incident.description}}
+            </div>
+        </ion-item>
+    </ion-list>
+    <div class="button-bar">
+        <button ion-button color="danger" (click)="onIncomplete()">Incomplete</button>
+        <button ion-button color="danger" (click)="onComplete()">Complete</button>
+    </div>
+</ion-content>
