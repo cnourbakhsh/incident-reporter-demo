@@ -1,0 +1,17 @@
+import com.redhat.vizuri.demo.domain.Remediation;
+import com.redhat.vizuri.demo.domain.Status;
+import java.util.ArrayList;
+
+dialect "mvel"
+
+rule "Assign remediation"
+    agenda-group "assign-remediation"
+when
+    $r : Remediation ( workerId == null )
+    // $w : Worker ( skill == $r.requiredSkill )
+then
+    modify ($r) {
+        setWorkerId(99l),
+        setStatus(Status.ASSIGNED)
+    }
+end
