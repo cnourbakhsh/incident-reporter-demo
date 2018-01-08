@@ -7,7 +7,6 @@ var request = require("request");
 var multer = require("multer");
 var fs = require("fs");
 var uuid = require("uuid/v1");
-var querystring_1 = require("querystring");
 var PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'process-server-incident-demo.192.168.99.100.nip.io';
 var DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'decision-server-incident-demo.192.168.99.100.nip.io';
 var SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST + '/' + 'services-0.0.1-SNAPSHOT' || 'services-server-incident-demo.192.168.99.100.nip.io' + '/' + 'services-0.0.1-SNAPSHOT';
@@ -184,7 +183,6 @@ var Server = (function () {
     Server.prototype.acceptBase64Image = function (req, res) {
         console.log('app acceptBase64Image');
         var data = req.body;
-        data = querystring_1.unescape(data).substr(1);
         data = data.replace(/^data:image\/jpeg;base64,/, '');
         var filename = uuid();
         var instanceId = req.params.instanceId;
@@ -462,8 +460,8 @@ var Server = (function () {
                     var processCount_1 = processes.length;
                     if (processes && processCount_1 > 0) {
                         for (var _i = 0, processes_1 = processes; _i < processes_1.length; _i++) {
-                            var process = processes_1[_i];
-                            loadClaimDetails(process, function (claim) {
+                            var process_1 = processes_1[_i];
+                            loadClaimDetails(process_1, function (claim) {
                                 claimCount_1++;
                                 if (claim != null || claim != undefined) {
                                     claim.photos = [];

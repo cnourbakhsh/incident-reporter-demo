@@ -201,7 +201,7 @@ export class Server {
         console.log('app acceptBase64Image');
 
         let data: string = req.body;
-        data = unescape(data).substr(1);
+        //data = unescape(data).substr(1);
         data = data.replace(/^data:image\/jpeg;base64,/, '');
         let filename = uuid();
         let instanceId = req.params.instanceId;
