@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { HTTP } from '@ionic-native/http';
+import { Headers, Http } from '@angular/http';
 import { Claim } from '../../objects/Claim';
 import { AdjustClaimComponent } from '../adjust-claim/adjust-claim.component';
 import { ClaimService } from '../../services/claims.service';
@@ -16,7 +16,7 @@ export class ClaimDetailsComponent implements OnInit {
   claim: Claim;
   comment: any;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private camera: Camera, private http: HTTP, private claimService: ClaimService) { }
+  constructor(private navCtrl: NavController, private navParams: NavParams, private camera: Camera, private http: Http, private claimService: ClaimService) { }
 
   ngOnInit(): void {
     this.claim = this.navParams.data;
@@ -64,8 +64,11 @@ export class ClaimDetailsComponent implements OnInit {
   }
 
   private uploadBase64Image(base64Image: string): void {
-    this.http.post(environment.mobileBackendUrl + '/api/v1/bpms/accept-base64-image/' + this.claim.processId + '/' + 'test_file' + '/reporter', base64Image, { 'content-type': 'text/plain' }).then(res => {
-      console.log(res);
+    let headers = new Headers({ 'Content-Type': 'text/plain' });
+    this.http.post(environment.mobileBackendUrl + '/api/v1/bpms/accept-base64-image/' + this.claim.processId + '/' + 'photo-file' + '/reporter', base64Image, { headers: headers }).toPromise().then(res => {
+      if (res) {
+        this.claim.photos.push(res.text());
+      }
     }).catch(error => {
       console.error(error);
     });
