@@ -29,14 +29,9 @@ export class AdjustClaimComponent implements OnInit {
     this.claim.approved = true;
     this.claim.questionnaire.completedDate = new Date();
     this.claim.questionnaire.completedBy = 'tester';
-    if (this.claim) {
-      this.claimService.PUT(environment.mobileBackendUrl + '/api/v1/claim', JSON.stringify(this.claim)).subscribe((res) => {
-        this.claim.id = res.guid;
-        this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/doadjuster/' + this.claim.processId + '/' + true, JSON.stringify(this.task)).subscribe((res) => {
-          this.navCtrl.pop();
-        });
-      });
-    }
+    this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/doadjuster/' + this.claim.processId + '/' + true, JSON.stringify(this.task)).subscribe((res) => {
+      this.navCtrl.pop();
+    });
   }
 
   onIncomplete(): void {
