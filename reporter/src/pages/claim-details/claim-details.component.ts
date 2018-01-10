@@ -64,9 +64,7 @@ export class ClaimDetailsComponent implements OnInit {
   private uploadBase64Image(base64Image: string): void {
     let headers = new Headers({ 'Content-Type': 'text/plain' });
     this.http.post(environment.mobileBackendUrl + '/api/v1/bpms/accept-base64-image/' + this.claim.processId + '/' + 'photo-file' + '/reporter', base64Image, { headers: headers }).toPromise().then(res => {
-      console.log(res);
       if (res) {
-        console.log(res.text());
         this.claim.photos.push(res.text());
       }
     }).catch(error => {
