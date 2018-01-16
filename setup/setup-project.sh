@@ -26,60 +26,39 @@ then
 fi
 
 #Create the templates
+echo "getting nexus and jboss images"
 oc login -u system:admin
 oc create -f setup/nexus3-persistent-template.yaml -n openshift
 oc create -f setup/jboss-image-streams.json -n openshift
 
 #Create the project
+echo "logging into minishift"
 oc login -u developer -p developer
 oc new-project incident-demo
 
 #Deploy Nexus
 oc new-app --template=nexus3-persistent -p VOLUME_CAPACITY=25Gi
 NEXUS_STATUS=`oc get pods`
-echo "Waiting for Nexus to deploy"
+echo "Waiting for Nexus to deploy ... "
 sleep 5
 echo $NEXUS_STATUS
 while [[ "$NEXUS_STATUS" == *"nexus3-1-deploy"* || "$NEXUS_STATUS" == "" || "$NEXUS_STATUS" == *"nexus3-1-build"* ]]
 do
 sleep 5
 NEXUS_STATUS=`oc get pods`
-echo "."
+echo "$NEXUS_STATUS"
 done
-echo "Deployment done"
-read -p "What is the URL for Nexus? (e.g. http://nexus3-incident-demo.192.168.99.100.nip.io) NO TRAILING SLASHES!" NEXUS_URL
-MINISHIFT_URL=`echo $NEXUS_URL | cut -c29-`
+export NEXUS_URL="http://`oc get route nexus3 | awk 'FNR == 2 {print $2}'`"
+echo "NEXUS_URL: $NEXUS_URL"
+echo "Deployment done `oc get route nexus3`"
+#read -p "What is the URL for Nexus? (e.g. http://nexus3-incident-demo.192.168.99.100.nip.io) NO TRAILING SLASHES!" NEXUS_URL
+export MINISHIFT_URL=`echo $NEXUS_URL | cut -c29-`
 
+echo "MINISHIFT_URL: $MINISHIFT_URL"
 #Build the domain
 cd domain
-rm -rf pom.xml
 
-FILE="./pom.xml"
-/bin/cat <<EOM > $FILE
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<groupId>com.redhat.vizuri.summit17</groupId>
-<artifactId>domain</artifactId>
-<version>0.0.1-SNAPSHOT</version>
-<properties>
-<nexus.url>$NEXUS_URL</nexus.url>
-<maven.compiler.target>1.8</maven.compiler.target>
-<maven.compiler.source>1.8</maven.compiler.source>
-</properties>
-<distributionManagement>
-<repository>
-<id>minishift-nexus-releases</id>
-<url>$NEXUS_URL/repository/maven-releases/</url>
-</repository>
-<snapshotRepository>
-<id>minishift-nexus-snapshots</id>
-<url>$NEXUS_URL/repository/maven-snapshots/</url>
-</snapshotRepository>
-</distributionManagement>
-</project>
-EOM
-
+echo "Build and deploy the domaon model ..."
 mvn --settings domain-settings.xml deploy
 cd ..
 

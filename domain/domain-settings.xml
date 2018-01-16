@@ -135,7 +135,7 @@ under the License.
      	<username>admin</username>
      	<password>admin123</password>
     </server>
-
+    <!--
     <server>
      <id>cloudbeesprivate</id>
      <username>ggdemoserver</username>
@@ -151,6 +151,7 @@ under the License.
 			<username>fswAdmin</username>
 		<password>jb0ssredhat!</password>
 	  </server>
+	  -->
   </servers>
 
   <!-- mirrors
