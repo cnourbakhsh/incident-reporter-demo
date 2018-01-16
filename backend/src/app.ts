@@ -5,7 +5,6 @@ import * as request from 'request';
 import * as multer from 'multer';
 import * as fs from 'fs';
 import * as uuid from 'uuid/v1';
-import { unescape } from 'querystring';
 
 // Must place this variables here due to this scoping issues
 let PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'process-server-incident-demo.192.168.99.100.nip.io';
@@ -16,7 +15,7 @@ let PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || '1776e96057261031
 let DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || '4c1342a8827bf46033cb95f0bdf27f0b';
 let BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
 let REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
-let uuidv1 = require('uuid/v1');
+let notifications: any[] = [];
 
 let loadClaimDetails = (process, cb) => {
     console.log('app loadClaimDetails');
@@ -195,13 +194,19 @@ export class Server {
         this.app.post('/api/v1/bpms/update-questions', this.jsonParser, this.updateQuestions);
         this.app.post('/api/v1/bpms/upload-photo/:instanceId/:fileName/:messageSource', this.upload.single('file'), this.claimAddPhoto);
         this.app.post('/api/v1/bpms/accept-base64-image/:instanceId/:fileName/:messageSource', bodyParser.text({ type: 'text/plain', limit: '1000000000' }), this.acceptBase64Image);
+        this.app.get('/api/v1/notifications', this.jsonParser, this.getNotifications);
+    }
+
+    private getNotifications(req, res) {
+        console.log('app getNotifications');
+
+        return res.send(notifications);
     }
 
     private acceptBase64Image(req, res) {
         console.log('app acceptBase64Image');
 
         let data: string = req.body;
-        //data = unescape(data).substr(1);
         data = data.replace(/^data:image\/jpeg;base64,/, '');
         let filename = uuid();
         let instanceId = req.params.instanceId;
@@ -262,7 +267,6 @@ export class Server {
 
         let filePost = request(options, (error, response, body) => {
             if (!error && response.statusCode == 200) {
-                let data = JSON.parse(body);
                 processAddPhoto(instanceId, fileName, updateSource, function () {
                     return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
@@ -597,6 +601,14 @@ export class Server {
 
         request(options, (error, response, body) => {
             if (!error && response.statusCode == 201) {
+                let notification = {
+                    from: 'reporter',
+                    when: new Date(),
+                    message: 'NEW_CLAIM_CREATED',
+                    readableMessage: 'New claim created',
+                    processId: body
+                };
+                notifications.push(notification);
                 return res.json(body);
             } else {
                 res.json(error);
@@ -641,7 +653,6 @@ export class Server {
 
     private performRemediation(req, res) {
         console.log('app performRemediation');
-        let body = req.body;
         let instanceId = req.params.instanceId;
         let complete = req.params.complete;
         let updateInfo = { completed: complete };

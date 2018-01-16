@@ -15,7 +15,7 @@ var PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || '1776e96057261031
 var DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || '4c1342a8827bf46033cb95f0bdf27f0b';
 var BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
 var REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
-var uuidv1 = require('uuid/v1');
+var notifications = [];
 var loadClaimDetails = function (process, cb) {
     console.log('app loadClaimDetails');
     var instanceId = process['process-instance-id'];
@@ -179,6 +179,11 @@ var Server = (function () {
         this.app.post('/api/v1/bpms/update-questions', this.jsonParser, this.updateQuestions);
         this.app.post('/api/v1/bpms/upload-photo/:instanceId/:fileName/:messageSource', this.upload.single('file'), this.claimAddPhoto);
         this.app.post('/api/v1/bpms/accept-base64-image/:instanceId/:fileName/:messageSource', bodyParser.text({ type: 'text/plain', limit: '1000000000' }), this.acceptBase64Image);
+        this.app.get('/api/v1/notifications', this.jsonParser, this.getNotifications);
+    };
+    Server.prototype.getNotifications = function (req, res) {
+        console.log('app getNotifications');
+        return res.send(notifications);
     };
     Server.prototype.acceptBase64Image = function (req, res) {
         console.log('app acceptBase64Image');
@@ -241,7 +246,6 @@ var Server = (function () {
         };
         var filePost = request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                var data = JSON.parse(body);
                 processAddPhoto(instanceId, fileName, updateSource, function () {
                     return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
@@ -567,6 +571,14 @@ var Server = (function () {
         };
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 201) {
+                var notification = {
+                    from: 'reporter',
+                    when: new Date(),
+                    message: 'NEW_CLAIM_CREATED',
+                    readableMessage: 'New claim created',
+                    processId: body
+                };
+                notifications.push(notification);
                 return res.json(body);
             }
             else {
@@ -611,7 +623,6 @@ var Server = (function () {
     };
     Server.prototype.performRemediation = function (req, res) {
         console.log('app performRemediation');
-        var body = req.body;
         var instanceId = req.params.instanceId;
         var complete = req.params.complete;
         var updateInfo = { completed: complete };
