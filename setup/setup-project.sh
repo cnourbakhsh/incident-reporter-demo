@@ -77,3 +77,15 @@ oc expose svc/services-server
 #Deploy the Mobile Backend
 oc new-app registry.access.redhat.com/rhscl/nodejs-4-rhel7~https://github.com/cnourbakhsh/incident-reporter-demo.git#consolidated --context-dir=backend -e DECISION_SERVER_HOST='decision-server-incident-demo.'$MINISHIFT_URL -e DECISION_CONTAINER_ID=4c1342a8827bf46033cb95f0bdf27f0b -e DECISION_BASIC_AUTH='Basic ZGVjaWRlcjpkZWNpZGVyIzk5' -e PROCESS_SERVER_HOST='process-server-incident-demo.'$MINISHIFT_URL -e PROCESS_CONTAINER_ID=1776e960572610314f3f813a5dbb736d -e PROCESS_BASIC_AUTH='Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==' --name=mobile-backend -e SERVICES_SERVER_HOST='services-server-incident-demo.'$MINISHIFT_URL -e EXPOSED_SERVICES_SERVER_HOST='services-server-incident-demo.'$MINISHIFT_URL -e OPENSHIFT_NODEJS_PORT=8080 -e OPENSHIFT_NODEJS_IP=0.0.0.0
 oc expose svc/mobile-backend
+
+#Expose remote routes for use by mobile devices
+
+#Delete any existing remotely exposed routes
+oc delete routes mobile-backend-phone-route
+oc delete routes services-phone-route
+
+#Remote route for mobile backend
+oc expose service/mobile-backend --name=mobile-backend-phone-route --hostname=mobile-backend-incident-demo.$(ipconfig getifaddr en0).nip.io
+
+#Remote route for services server
+oc expose service/services-server --name=services-phone-route --hostname=services-server-incident-demo.$(ipconfig getifaddr en0).nip.io
