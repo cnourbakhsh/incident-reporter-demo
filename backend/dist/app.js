@@ -15,7 +15,8 @@ var PROCESS_CONTAINER_ID = process.env.PROCESS_CONTAINER_ID || '1776e96057261031
 var DECISION_CONTAINER_ID = process.env.DECISION_CONTAINER_ID || '4c1342a8827bf46033cb95f0bdf27f0b';
 var BASIC_AUTH = process.env.PROCESS_BASIC_AUTH || 'Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==';
 var REQUEST_AUTHORIZATION = process.env.DECISION_BASIC_AUTH || 'Basic ZGVjaWRlcjpkZWNpZGVyIzk5';
-var notifications = [];
+var reporterNotifications = [];
+var responderNotifications = [];
 var loadClaimDetails = function (process, cb) {
     console.log('app loadClaimDetails');
     var instanceId = process['process-instance-id'];
@@ -179,11 +180,21 @@ var Server = (function () {
         this.app.post('/api/v1/bpms/update-questions', this.jsonParser, this.updateQuestions);
         this.app.post('/api/v1/bpms/upload-photo/:instanceId/:fileName/:messageSource', this.upload.single('file'), this.claimAddPhoto);
         this.app.post('/api/v1/bpms/accept-base64-image/:instanceId/:fileName/:messageSource', bodyParser.text({ type: 'text/plain', limit: '1000000000' }), this.acceptBase64Image);
+        this.app.get('/api/v1/notifications/reporter', this.jsonParser, this.getReporterNotifications);
+        this.app.get('/api/v1/notifications/responder', this.jsonParser, this.getResponderNotifications);
         this.app.get('/api/v1/notifications', this.jsonParser, this.getNotifications);
     };
     Server.prototype.getNotifications = function (req, res) {
         console.log('app getNotifications');
-        return res.send(notifications);
+        return res.send(reporterNotifications.concat(responderNotifications));
+    };
+    Server.prototype.getReporterNotifications = function (req, res) {
+        console.log('app getReporterNotifications');
+        return res.send(reporterNotifications);
+    };
+    Server.prototype.getResponderNotifications = function (req, res) {
+        console.log('app getResponderNotifications');
+        return res.send(responderNotifications);
     };
     Server.prototype.acceptBase64Image = function (req, res) {
         console.log('app acceptBase64Image');
@@ -247,6 +258,14 @@ var Server = (function () {
         var filePost = request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 processAddPhoto(instanceId, fileName, updateSource, function () {
+                    var notification = {
+                        from: 'either',
+                        when: new Date(),
+                        message: 'ADD_COMMENT',
+                        readableMessage: 'New photo added',
+                        processId: instanceId
+                    };
+                    responderNotifications.push(notification);
                     return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
             }
@@ -578,7 +597,7 @@ var Server = (function () {
                     readableMessage: 'New claim created',
                     processId: body
                 };
-                notifications.push(notification);
+                responderNotifications.push(notification);
                 return res.json(body);
             }
             else {
@@ -601,6 +620,14 @@ var Server = (function () {
                         updateInformation(taskId, updateInfo, function (error) {
                             console.log('after updateInformation taskId: ', taskId);
                             if (!error) {
+                                var notification = {
+                                    from: 'either',
+                                    when: new Date(),
+                                    message: 'ADD_COMMENT',
+                                    readableMessage: 'New comment added',
+                                    processId: instanceId
+                                };
+                                responderNotifications.push(notification);
                                 res.json('SUCCESS');
                             }
                             else {
