@@ -10,6 +10,7 @@ import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/mergeMap';
 import { HomePage } from '../pages/home/home';
 import { environment } from '../services/environment';
+import { ClaimService } from '../services/claims.service';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,7 +21,7 @@ export class MyApp implements OnDestroy {
   notifications: any[] = [];
   notificationsSubcription: Subscription;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private http: Http, private alertCtrl: AlertController) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private http: Http, private alertCtrl: AlertController, private claimService: ClaimService) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -28,7 +29,7 @@ export class MyApp implements OnDestroy {
       splashScreen.hide();
     });
 
-    this.notificationsSubcription = Observable.interval(3000).flatMap(i => this.http.get(environment.mobileBackendUrl + '/api/v1/notifications/responder')).subscribe(res => {
+    this.notificationsSubcription = Observable.interval(3000).flatMap(i => this.http.get((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/notifications/responder')).subscribe(res => {
       if (this.notifications && this.notifications.length !== res.json().length) {
         console.log(res.json().length);
         let notification = res.json().pop();

@@ -29,7 +29,7 @@ export class AdjustClaimComponent implements OnInit {
     this.claim.approved = true;
     this.claim.questionnaire.completedDate = new Date();
     this.claim.questionnaire.completedBy = 'tester';
-    this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/doadjuster/' + this.claim.processId + '/' + true, JSON.stringify(this.task)).subscribe((res) => {
+    this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/doadjuster/' + this.claim.processId + '/' + true, JSON.stringify(this.task)).subscribe((res) => {
       this.navCtrl.pop();
     });
   }
@@ -37,7 +37,7 @@ export class AdjustClaimComponent implements OnInit {
   onIncomplete(): void {
     this.task.task_complete = false;
     this.task.task_approved = false;
-    this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/doadjuster/' + this.claim.processId + '/' + false, JSON.stringify(this.task)).subscribe((res) => {
+    this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/doadjuster/' + this.claim.processId + '/' + false, JSON.stringify(this.task)).subscribe((res) => {
       this.navCtrl.pop();
     });
   }

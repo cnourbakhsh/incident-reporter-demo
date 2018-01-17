@@ -10,6 +10,7 @@ import { HomePage } from '../pages/home/home';
 import { ExistingClaimsComponent } from '../pages/existing-claims/existing-claims.component';
 import { AdjustClaimComponent } from '../pages/adjust-claim/adjust-claim.component';
 import { ClaimDetailsComponent } from '../pages/claim-details/claim-details.component';
+import { AdminComponent } from '../pages/admin/admin.component';
 import { ClaimService } from '../services/claims.service';
 import { OrderByPipe } from '../pages/existing-claims/orderBy.pipe';
 
@@ -20,6 +21,7 @@ import { OrderByPipe } from '../pages/existing-claims/orderBy.pipe';
     ExistingClaimsComponent,
     AdjustClaimComponent,
     ClaimDetailsComponent,
+    AdminComponent,
     OrderByPipe
   ],
   imports: [
@@ -33,7 +35,8 @@ import { OrderByPipe } from '../pages/existing-claims/orderBy.pipe';
     HomePage,
     ExistingClaimsComponent,
     AdjustClaimComponent,
-    ClaimDetailsComponent
+    ClaimDetailsComponent,
+    AdminComponent
   ],
   providers: [
     StatusBar,

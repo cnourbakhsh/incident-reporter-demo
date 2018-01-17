@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Headers, Http } from '@angular/http';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Claim } from '../../objects/Claim';
 import { AdjustClaimComponent } from '../adjust-claim/adjust-claim.component';
@@ -16,7 +16,7 @@ export class ClaimDetailsComponent implements OnInit {
   claim: Claim;
   comment: any;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private alertCtrl: AlertController, private camera: Camera, private http: Http, private claimService: ClaimService) { }
+  constructor(private navCtrl: NavController, private navParams: NavParams, private camera: Camera, private http: Http, private claimService: ClaimService) { }
 
   ngOnInit(): void {
     this.claim = this.navParams.data;
@@ -28,7 +28,7 @@ export class ClaimDetailsComponent implements OnInit {
 
   saveComment(): void {
     if (this.comment) {
-      this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: this.comment, messageSource: 'responder' })).subscribe((res) => {
+      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: this.comment, messageSource: 'responder' })).subscribe((res) => {
         if (!this.claim.incidentComments) {
           this.claim.incidentComments = [];
         }
@@ -65,7 +65,7 @@ export class ClaimDetailsComponent implements OnInit {
 
   private uploadBase64Image(base64Image: string): void {
     let headers = new Headers({ 'Content-Type': 'text/plain' });
-    this.http.post(environment.mobileBackendUrl + '/api/v1/bpms/accept-base64-image/' + this.claim.processId + '/' + 'photo-file' + '/reporter', base64Image, { headers: headers }).toPromise().then(res => {
+    this.http.post((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/accept-base64-image/' + this.claim.processId + '/' + 'photo-file' + '/reporter', base64Image, { headers: headers }).toPromise().then(res => {
       if (res) {
         this.claim.photos.push(res.text());
       }
