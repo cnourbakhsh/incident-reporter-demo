@@ -1,3 +1,12 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons start>
+      <button ion-button color="white" (click)='onAdmin()'>
+        <ion-icon name="cog"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content overflow-scroll="true">
   <div class="item item-body center" id="landing-page">
     <br />
@@ -10,7 +19,8 @@
     <br />
     <img src="./assets/img/3scale-logo-red-hat-small.png">
     <br />
-    <p>Reporter Application</p>
+    <p>Reporter Application
+    </p>
     <p>
       <button ion-button color="dark" (click)='onGetStarted()'>Get Started</button>
     </p>

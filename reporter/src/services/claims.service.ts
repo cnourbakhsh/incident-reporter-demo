@@ -8,6 +8,8 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class ClaimService {
 
+    public mobileBackendURL: string = '';
+
     constructor(private http: Http) { }
 
     GET(url: string): Observable<any> {

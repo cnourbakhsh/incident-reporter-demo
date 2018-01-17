@@ -65,7 +65,7 @@ export class NewClaimComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/customer-incident', JSON.stringify(this.incident)).subscribe((res) => {
+    this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/customer-incident', JSON.stringify(this.incident)).subscribe((res) => {
       this.claim.questionnaire = res;
       this.answers = [];
       this.showIncident = false;
@@ -100,7 +100,7 @@ export class NewClaimComponent implements OnInit {
 
     this.claim.questionnaire.answers = answers;
     if (this.claim.questionnaire.answers.length > 0) {
-      this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/update-questions', JSON.stringify(this.claim.questionnaire)).subscribe((res) => {
+      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/update-questions', JSON.stringify(this.claim.questionnaire)).subscribe((res) => {
         this.claim.questionnaire = res;
       });
     }
@@ -111,7 +111,7 @@ export class NewClaimComponent implements OnInit {
   }
 
   onFinish(): void {
-    this.claimService.POST(environment.mobileBackendUrl + '/api/v1/bpms/startprocess', JSON.stringify(this.claim)).subscribe((res) => {
+    this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/startprocess', JSON.stringify(this.claim)).subscribe((res) => {
       this.claim.processId = res;
       this.navCtrl.pop();
     });

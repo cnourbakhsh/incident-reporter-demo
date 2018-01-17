@@ -11,6 +11,7 @@ import { HomePage } from '../pages/home/home';
 import { ExistingClaimsComponent } from '../pages/existing-claims/existing-claims.component';
 import { NewClaimComponent } from '../pages/new-claim/new-claim.component';
 import { ClaimDetailsComponent } from '../pages/claim-details/claim-details.component';
+import { AdminComponent } from '../pages/admin/admin.component'
 import { ClaimService } from '../services/claims.service';
 import { OrderByPipe } from '../pages/existing-claims/orderBy.pipe';
 
@@ -21,6 +22,7 @@ import { OrderByPipe } from '../pages/existing-claims/orderBy.pipe';
     ExistingClaimsComponent,
     NewClaimComponent,
     ClaimDetailsComponent,
+    AdminComponent,
     OrderByPipe
   ],
   imports: [
@@ -34,7 +36,8 @@ import { OrderByPipe } from '../pages/existing-claims/orderBy.pipe';
     HomePage,
     ExistingClaimsComponent,
     NewClaimComponent,
-    ClaimDetailsComponent
+    ClaimDetailsComponent,
+    AdminComponent
   ],
   providers: [
     StatusBar,
