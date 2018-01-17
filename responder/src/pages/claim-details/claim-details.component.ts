@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Headers, Http } from '@angular/http';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Claim } from '../../objects/Claim';
 import { AdjustClaimComponent } from '../adjust-claim/adjust-claim.component';
 import { ClaimService } from '../../services/claims.service';
@@ -16,7 +16,7 @@ export class ClaimDetailsComponent implements OnInit {
   claim: Claim;
   comment: any;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private camera: Camera, private http: Http, private claimService: ClaimService) { }
+  constructor(private navCtrl: NavController, private navParams: NavParams, private alertCtrl: AlertController, private camera: Camera, private http: Http, private claimService: ClaimService) { }
 
   ngOnInit(): void {
     this.claim = this.navParams.data;

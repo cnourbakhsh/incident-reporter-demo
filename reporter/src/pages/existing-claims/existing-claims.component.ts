@@ -5,6 +5,9 @@ import { NewClaimComponent } from '../new-claim/new-claim.component';
 import { ClaimDetailsComponent } from '../claim-details/claim-details.component';
 import { ClaimService } from '../../services/claims.service';
 import { environment } from '../../services/environment';
+import { Headers, Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'existing-claims',
@@ -12,13 +15,15 @@ import { environment } from '../../services/environment';
 })
 export class ExistingClaimsComponent {
 
+  notifications: any[] = [];
   claims: Claim[];
   claim: Claim;
   gotData: boolean = false;
 
-  constructor(private navCtrl: NavController, private claimService: ClaimService) { }
+  constructor(private navCtrl: NavController, private claimService: ClaimService, private http: Http) { }
 
   ionViewDidEnter(): void {
+    console.log('view entered');
     this.claimService.GET(environment.mobileBackendUrl + '/api/v1/claims').subscribe((res) => {
       this.claims = res;
       this.gotData = true;

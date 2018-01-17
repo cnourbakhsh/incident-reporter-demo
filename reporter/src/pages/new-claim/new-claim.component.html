@@ -55,21 +55,21 @@
     <div *ngIf="loadQuestions">
         <ion-list>
             <div *ngFor="let question of claim.questionnaire.questions">
-                <div *ngIf="question.answerType === 'INTEGER' || question.answerType === 'TEXT'">
+                <div *ngIf="question.enabled && question.answerType === 'INTEGER' || question.answerType === 'TEXT'">
                     <ion-item>
                         <ion-label floating>{{question.description}}</ion-label>
                         <ion-input type="text" [(ngModel)]="answers[claim.questionnaire.questions.indexOf(question)]" (click)="updateAnswers()"></ion-input>
                     </ion-item>
                 </div>
-                <div *ngIf="question.answerType === 'YES_NO'">
+                <div *ngIf="question.enabled && question.answerType === 'YES_NO'">
                     <ion-item>
-                        <ion-label fixed>{{question.description}}</ion-label>
+                        <ion-label>{{question.description}}</ion-label>
                         <ion-checkbox [(ngModel)]="answers[claim.questionnaire.questions.indexOf(question)]" (click)="updateAnswers()"></ion-checkbox>
                     </ion-item>
                 </div>
-                <div *ngIf="question.answerType === 'OPTION'">
+                <div *ngIf="question.enabled && question.answerType === 'OPTION'">
                     <ion-item>
-                        <ion-label fixed>{{question.description}}</ion-label>
+                        <ion-label>{{question.description}}</ion-label>
                         <ion-select [(ngModel)]="answers[claim.questionnaire.questions.indexOf(question)]" (click)="updateAnswers()" interface="popover">
                             <ion-option *ngFor="let option of question.options">{{option}}</ion-option>
                         </ion-select>

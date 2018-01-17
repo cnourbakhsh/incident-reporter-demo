@@ -24,6 +24,14 @@
         </ion-card-header>
     </div>
 
+    <div *ngIf="notifications && notifications.length > 0">
+        <ion-card-header>
+            <ion-item>
+                <ion-icon name="alert"></ion-icon>There are new reported incidents!
+            </ion-item>
+        </ion-card-header>
+    </div>
+
     <div class="incident-content-area" *ngIf="claims && claims.length > 0">
         <ion-card *ngFor="let claim of claims | orderBy : '-processId'">
             <ion-card-header>
