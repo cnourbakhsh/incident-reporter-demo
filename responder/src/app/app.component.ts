@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Http } from '@angular/http';
-import { Platform, AlertController } from 'ionic-angular';
+import { Platform, AlertController, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Subscription } from 'rxjs/Subscription';
@@ -17,6 +17,7 @@ import { ClaimService } from '../services/claims.service';
 })
 export class MyApp implements OnDestroy {
 
+  @ViewChild(Nav) nav;
   rootPage: any = HomePage;
   notifications: any[] = [];
   notificationsSubcription: Subscription;
@@ -37,7 +38,13 @@ export class MyApp implements OnDestroy {
         let alert = this.alertCtrl.create({
           title: 'Attention',
           subTitle: notification.readableMessage,
-          buttons: ['Dismiss']
+          buttons: [{
+            text: 'OK', role: 'ok', handler: () => {
+              if (this.nav.canGoBack()) {
+                this.nav.pop();
+              }
+            }
+          }]
         });
         alert.present();
       }

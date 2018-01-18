@@ -12,8 +12,7 @@
 <ion-content class="has-footer">
     <ion-list>
         <ion-item>
-            <strong>Process Id</strong>
-            <br>{{claim.processId}}
+            <strong>Process Id: </strong>{{claim.processId}}
         </ion-item>
         <ion-item>
             <strong>Type: </strong>{{claim.incident.incidentType}}
@@ -29,7 +28,7 @@
         </ion-item>
     </ion-list>
     <div class="button-bar">
-        <button ion-button color="danger" (click)="onIncomplete()">Incomplete</button>
-        <button ion-button color="danger" (click)="onComplete()">Complete</button>
+        <button ion-button color="danger" (click)="onIncomplete()">Reject</button>
+        <button ion-button color="danger" (click)="onComplete()">Approve</button>
     </div>
 </ion-content>
