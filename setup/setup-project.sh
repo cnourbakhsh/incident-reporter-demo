@@ -81,11 +81,11 @@ oc expose svc/mobile-backend
 #Expose remote routes for use by mobile devices
 
 #Delete any existing remotely exposed routes
-oc delete routes mobile-backend-phone-route
-oc delete routes services-phone-route
+oc delete routes exposed-mobile-backend-route
+oc delete routes exposed-services-route
 
 #Remote route for mobile backend
-oc expose service/mobile-backend --name=mobile-backend-phone-route --hostname=mobile-backend-incident-demo.$(ipconfig getifaddr en0).nip.io
+oc expose service/mobile-backend --name=exposed-mobile-backend-route --hostname=mobile-backend-incident-demo.$(ipconfig getifaddr en0).nip.io
 
 #Remote route for services server
-oc expose service/services-server --name=services-phone-route --hostname=services-server-incident-demo.$(ipconfig getifaddr en0).nip.io
+oc expose service/services-server --name=exposed-services-route --hostname=services-server-incident-demo.$(ipconfig getifaddr en0).nip.io
