@@ -37,7 +37,7 @@ export class MyApp implements OnDestroy {
         console.log(notification);
         let alert = this.alertCtrl.create({
           title: 'Attention',
-          subTitle: notification.readableMessage,
+          subTitle: notification.readableMessage + ' for claim ' + notification.processId,
           buttons: [{
             text: 'OK', role: 'ok', handler: () => {
               if (this.nav.canGoBack()) {
