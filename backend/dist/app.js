@@ -258,14 +258,6 @@ var Server = (function () {
         var filePost = request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 processAddPhoto(instanceId, fileName, updateSource, function () {
-                    var notification = {
-                        from: 'either',
-                        when: new Date(),
-                        message: 'ADD_COMMENT',
-                        readableMessage: 'New photo added',
-                        processId: instanceId
-                    };
-                    responderNotifications.push(notification);
                     return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
             }
@@ -281,6 +273,14 @@ var Server = (function () {
             filename: fileName,
             contentType: req.file.mimetype
         });
+        var notification = {
+            from: 'either',
+            when: new Date(),
+            message: 'ADD_COMMENT',
+            readableMessage: 'New photo added',
+            processId: instanceId
+        };
+        responderNotifications.push(notification);
     };
     Server.prototype.createIncident = function (req, res) {
         console.log('app createIncident');

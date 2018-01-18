@@ -280,14 +280,6 @@ export class Server {
         let filePost = request(options, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 processAddPhoto(instanceId, fileName, updateSource, function () {
-                    let notification = {
-                        from: 'either',
-                        when: new Date(),
-                        message: 'ADD_COMMENT',
-                        readableMessage: 'New photo added',
-                        processId: instanceId
-                    };
-                    responderNotifications.push(notification);
                     return res.json({ link: 'http://' + SERVICES_SERVER_HOST + '/photos/' + instanceId + '/' + fileName });
                 });
             } else if (error) {
@@ -302,6 +294,14 @@ export class Server {
             filename: fileName,
             contentType: req.file.mimetype
         });
+        let notification = {
+            from: 'either',
+            when: new Date(),
+            message: 'ADD_COMMENT',
+            readableMessage: 'New photo added',
+            processId: instanceId
+        };
+        responderNotifications.push(notification);
     }
 
     private createIncident(req, res) {
