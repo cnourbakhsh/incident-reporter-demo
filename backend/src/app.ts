@@ -129,6 +129,14 @@ let processAddPhoto = function (instanceId, fileName, source, cb) {
                 if (!error) {
                     updateInformation(taskId, updateInfo, error => {
                         if (!error) {
+                            let notification = {
+                                from: 'either',
+                                when: new Date(),
+                                message: 'ADD_COMMENT',
+                                readableMessage: 'New photo added',
+                                processId: instanceId
+                            };
+                            responderNotifications.push(notification);
                             cb(null, 'SUCCESS');
                         } else {
                             let msg = 'Unable to add photo, error: ' + error;
@@ -294,14 +302,6 @@ export class Server {
             filename: fileName,
             contentType: req.file.mimetype
         });
-        let notification = {
-            from: 'either',
-            when: new Date(),
-            message: 'ADD_COMMENT',
-            readableMessage: 'New photo added',
-            processId: instanceId
-        };
-        responderNotifications.push(notification);
     }
 
     private createIncident(req, res) {

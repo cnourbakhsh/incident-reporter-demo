@@ -124,6 +124,14 @@ var processAddPhoto = function (instanceId, fileName, source, cb) {
                 if (!error) {
                     updateInformation(taskId, updateInfo, function (error) {
                         if (!error) {
+                            var notification = {
+                                from: 'either',
+                                when: new Date(),
+                                message: 'ADD_COMMENT',
+                                readableMessage: 'New photo added',
+                                processId: instanceId
+                            };
+                            responderNotifications.push(notification);
                             cb(null, 'SUCCESS');
                         }
                         else {
@@ -273,14 +281,6 @@ var Server = (function () {
             filename: fileName,
             contentType: req.file.mimetype
         });
-        var notification = {
-            from: 'either',
-            when: new Date(),
-            message: 'ADD_COMMENT',
-            readableMessage: 'New photo added',
-            processId: instanceId
-        };
-        responderNotifications.push(notification);
     };
     Server.prototype.createIncident = function (req, res) {
         console.log('app createIncident');
