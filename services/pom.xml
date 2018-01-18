@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.redhat.vizuri.summit17</groupId>
-	<artifactId>services</artifactId>
+	<artifactId>supervisor-ui</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
@@ -70,6 +70,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+        			<finalName>supervisor-ui</finalName>                   
+    			</configuration>
 			</plugin>
 		</plugins>
 	</build>

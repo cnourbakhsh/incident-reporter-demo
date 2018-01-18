@@ -34,7 +34,7 @@ export class NewClaimComponent implements OnInit {
       reporterUserId: 99,
       type: null,
       description: null,
-      incidentDate: (Date.now(), 'yyyy-MM-dd'),
+      incidentDate: new Date().toISOString(),
       buildingName: null,
       stateCode: null,
       zipCode: null,
@@ -42,7 +42,7 @@ export class NewClaimComponent implements OnInit {
     };
 
     this.severities = ['LOW', 'MEDIUM', 'HIGH'];
-    this.incident.incidentDate = (Date.now(), 'yyyy-MM-dd');
+    //this.incident.incidentDate = new Date();
     this.incident.severity = 'LOW';
     this.incidentTypes = ['windshield', 'collision', 'hail'];
     this.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois',

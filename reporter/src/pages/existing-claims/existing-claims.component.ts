@@ -20,7 +20,6 @@ export class ExistingClaimsComponent {
   constructor(private navCtrl: NavController, private claimService: ClaimService) { }
 
   ionViewDidEnter(): void {
-    console.log('view entered');
     this.claimService.GET((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/claims').subscribe((res) => {
       this.claims = res;
       this.gotData = true;
