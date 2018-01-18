@@ -660,7 +660,7 @@ export class Server {
                                     readableMessage: 'New comment added',
                                     processId: instanceId
                                 };
-                                responderNotifications.push(notification);
+                                reporterNotifications.push(notification);
                                 res.json('SUCCESS');
                             } else {
                                 let msg = 'Unable to add comment, error: ' + error;

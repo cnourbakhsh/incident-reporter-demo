@@ -627,7 +627,7 @@ var Server = (function () {
                                     readableMessage: 'New comment added',
                                     processId: instanceId
                                 };
-                                responderNotifications.push(notification);
+                                reporterNotifications.push(notification);
                                 res.json('SUCCESS');
                             }
                             else {
