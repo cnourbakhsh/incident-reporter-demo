@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as uuid from 'uuid/v1';
 
 // Must place this variables here due to this scoping issues
-let SUPERVISOR_ARTIFACT_URI = 'supervisor-ui'; //'services-0.0.1-SNAPSHOT';
+let SUPERVISOR_ARTIFACT_URI = 'supervisor-ui-0.0.1-SNAPSHOT'; //'services-0.0.1-SNAPSHOT';
 let PROCESS_SERVER_HOST = process.env.PROCESS_SERVER_HOST || 'process-server-incident-demo.192.168.99.100.nip.io';
 let DECISION_SERVER_HOST = process.env.DECISION_SERVER_HOST || 'decision-server-incident-demo.192.168.99.100.nip.io';
 let SERVICES_SERVER_HOST = process.env.SERVICES_SERVER_HOST + '/' + SUPERVISOR_ARTIFACT_URI || 'services-server-incident-demo.192.168.99.100.nip.io' + '/' + SUPERVISOR_ARTIFACT_URI;
