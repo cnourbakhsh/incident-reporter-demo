@@ -21,7 +21,7 @@
 		vm.remediationAccepted = true;
 
 		vm.load = load;
-		vm.approve = approve;
+		vm.submit = submit;
 
 		function load() {
 			loadImage();
@@ -33,7 +33,7 @@
 			$http({
 				method: 'GET',
 				withCredentials: true,
-				url: location.protocol + '//' + location.host + '/services-0.0.1-SNAPSHOT/bpm/kie-server/services/rest/server/queries/processes/instances/' + vm.processId + '?withVars=true',
+				url: location.protocol + '//' + location.host + '/supervisor-ui-0.0.1-SNAPSHOT/bpm/kie-server/services/rest/server/queries/processes/instances/' + vm.processId + '?withVars=true',
 				headers: {
 					'Accept': 'application/json'
 				}
@@ -49,7 +49,7 @@
 					photoIdArr = JSON.parse(photoIdArr.replace(/'/g, '"'));
 					for (var i = 0; i < photoIdArr.length; i++) {
 						var photoName = photoIdArr[i];
-						vm.photos.push(location.protocol + '//' + location.host + '/services-0.0.1-SNAPSHOT/photos/' + vm.processId + '/' + photoName);
+						vm.photos.push(location.protocol + '//' + location.host + '/supervisor-ui-0.0.1-SNAPSHOT/photos/' + vm.processId + '/' + photoName);
 					}
 				}
 
@@ -76,7 +76,7 @@
 		}
 
 		function loadImage() {
-			var targetUrl = location.protocol + '//' + location.host + '/services-0.0.1-SNAPSHOT/bpm/kie-server/services/rest/server/containers/' + vm.containerId + "/images/processes/instances/" + vm.processId;
+			var targetUrl = location.protocol + '//' + location.host + '/supervisor-ui-0.0.1-SNAPSHOT/bpm/kie-server/services/rest/server/containers/' + vm.containerId + "/images/processes/instances/" + vm.processId;
 			$log.info('Calling: ' + targetUrl);
 			$http({
 				method: 'GET',
@@ -103,8 +103,8 @@
 			});
 		}
 
-		function approve() {
-			var baseUrl = location.protocol + '//' + location.host + '/services-0.0.1-SNAPSHOT/bpm/kie-server/services/rest/server/';
+		function submit() {
+			var baseUrl = location.protocol + '//' + location.host + '/supervisor-ui-0.0.1-SNAPSHOT/bpm/kie-server/services/rest/server/';
 			$log.info('Approving');
 			$http({
 				method: 'GET',
@@ -115,20 +115,20 @@
 				}
 			}).then(function successCallback(response) {
 				var data = response.data;
-				var approveTask;
+				var submitTask;
 				for (var i = 0; i < data['task-summary'].length; i++) {
 					var taskSummary = data['task-summary'][i];
 					if (taskSummary['task-status'] === 'Ready' && taskSummary['task-name'] === 'Review Case') {
-						approveTask = taskSummary;
+						submitTask = taskSummary;
 						break;
 					}
 				}
 
-				if (approveTask) {
+				if (submitTask) {
 					$http({
 						method: 'PUT',
 						withCredentials: true,
-						url: baseUrl + 'containers/' + vm.containerId + '/tasks/' + approveTask["task-id"] + '/states/completed?auto-progress=true&user=processor',
+						url: baseUrl + 'containers/' + vm.containerId + '/tasks/' + submitTask["task-id"] + '/states/completed?auto-progress=true&user=processor',
 						headers: {
 							'Accept': 'application/json',
 							'Content-Type': 'application/json'
