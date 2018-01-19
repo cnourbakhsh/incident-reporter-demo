@@ -70,11 +70,12 @@
 								<span ng-show="vm.autoUpdate">({{20 - vm.updateCount}} remaining)</span>
 								&nbsp; &nbsp;
 
-								<div class="input-group" style="width: 100%">
+								<div class="input-group">
 									<input type="text" class="form-control" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
 									 placeholder="Approval Comments" />
-									<span class="input-group-addon">
-										<input type="checkbox"> Accepted?</span>
+									<div class="input-group-addon">
+										<input type="checkbox"> Accepted?
+									</div>
 									<div class="input-group-btn">
 										<button class="btn btn-default" ng-click="vm.approve()" ng-disabled="!vm.completed">Submit</button>
 									</div>
