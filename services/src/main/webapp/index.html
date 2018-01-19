@@ -74,7 +74,8 @@
 									 placeholder="Approval Comments" />
 									<div class="input-group-btn">
 										<input type="checkbox" class="form-control" id="pRemediationAccepted" ng-model="vm.remediationAccepted" ng-disabled="!vm.completed"
-										/> Accepted?
+										/>
+										<button class="btn btn-default">Accepted?</button>
 										<button class="btn btn-default" ng-click="vm.approve()" ng-disabled="!vm.completed">Submit</button>
 									</div>
 								</div>
