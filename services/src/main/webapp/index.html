@@ -72,22 +72,11 @@
 								<div class="input-group">
 									<input type="text" class="form-control" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
 									 placeholder="Approval Comments" />
-									<span class="input-group-btn">
-										<input type="checkbox" class="form-control" id="pRemediationAccepted" ng-model="vm.remediationAccepted" ng-disabled="!vm.completed"
-										/>
-										<label for="pRemediationAccepted">Accepted?</label>
-									</span>
-									<span class="input-group-btn">
-										<button class="btn btn-default" ng-click="vm.approve()" ng-disabled="!vm.completed">Submit</button>
-									</span>
-								</div>
-
-								<div class="input-group">
-									<input type="text" class="form-control" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
-									 placeholder="Approval Comments" />
 									<div class="input-group-btn">
-										<input type="checkbox" class="form-control" id="pRemediationAccepted" ng-model="vm.remediationAccepted" ng-disabled="!vm.completed"
-										/>
+										<button>
+											<input type="checkbox" class="form-control" id="pRemediationAccepted" ng-model="vm.remediationAccepted" ng-disabled="!vm.completed"
+											/>
+										</button>
 										<label for="pRemediationAccepted">Accepted?</label>
 										<button class="btn btn-default" ng-click="vm.approve()" ng-disabled="!vm.completed">Submit</button>
 									</div>
