@@ -21,7 +21,7 @@
 		vm.remediationAccepted = true;
 
 		vm.load = load;
-		vm.approve = approve;
+		vm.submit = submit;
 
 		function load() {
 			loadImage();
@@ -103,7 +103,7 @@
 			});
 		}
 
-		function approve() {
+		function submit() {
 			var baseUrl = location.protocol + '//' + location.host + '/supervisor-ui-0.0.1-SNAPSHOT/bpm/kie-server/services/rest/server/';
 			$log.info('Approving');
 			$http({
@@ -115,20 +115,20 @@
 				}
 			}).then(function successCallback(response) {
 				var data = response.data;
-				var approveTask;
+				var submitTask;
 				for (var i = 0; i < data['task-summary'].length; i++) {
 					var taskSummary = data['task-summary'][i];
 					if (taskSummary['task-status'] === 'Ready' && taskSummary['task-name'] === 'Review Case') {
-						approveTask = taskSummary;
+						submitTask = taskSummary;
 						break;
 					}
 				}
 
-				if (approveTask) {
+				if (submitTask) {
 					$http({
 						method: 'PUT',
 						withCredentials: true,
-						url: baseUrl + 'containers/' + vm.containerId + '/tasks/' + approveTask["task-id"] + '/states/completed?auto-progress=true&user=processor',
+						url: baseUrl + 'containers/' + vm.containerId + '/tasks/' + submitTask["task-id"] + '/states/completed?auto-progress=true&user=processor',
 						headers: {
 							'Accept': 'application/json',
 							'Content-Type': 'application/json'

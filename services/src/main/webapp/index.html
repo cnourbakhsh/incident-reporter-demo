@@ -74,10 +74,10 @@
 									<input type="text" class="form-control" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
 									 placeholder="Approval Comments" />
 									<div class="input-group-addon">
-										<input type="checkbox"> Accepted?
+										<input type="checkbox" id="pRemediationAccepted" ng-model="vm.remediationAccepted" ng-disabled="!vm.completed"> Accepted?
 									</div>
 									<div class="input-group-btn">
-										<button class="btn btn-default" ng-click="vm.approve()" ng-disabled="!vm.completed">Submit</button>
+										<button class="btn btn-default" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
 									</div>
 								</div>
 
