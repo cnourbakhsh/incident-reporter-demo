@@ -7,6 +7,7 @@
 	<artifactId>supervisor-ui</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
+	<name>supervisor-ui</name>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -67,6 +68,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
