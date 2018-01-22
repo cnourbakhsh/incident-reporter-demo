@@ -59,7 +59,7 @@ echo "MINISHIFT_URL: $MINISHIFT_URL"
 #Build the domain
 cd domain
 
-echo "Build and deploy the domaon model ..."
+echo "Build and deploy the domain model ..."
 mvn --settings domain-settings.xml deploy
 cd ..
 
@@ -80,13 +80,15 @@ oc new-app registry.access.redhat.com/rhscl/nodejs-4-rhel7~https://github.com/cn
 oc expose svc/mobile-backend
 
 #Expose remote routes for use by mobile devices
+read -p "Please enter your local IP address: (e.g. 192.168.99.55) NO TRAILING SLASHES!" LOCAL_IP_ADDRESS
+echo "Using local IP address[$LOCAL_IP_ADDRESS] to setup exposed routes ..."
 
 #Delete any existing remotely exposed routes
 oc delete routes exposed-mobile-backend-route
 oc delete routes exposed-supervisor-route
 
 #Remote route for mobile backend
-oc expose service/mobile-backend --name=exposed-mobile-backend-route --hostname=mobile-backend-incident-demo.$(ipconfig getifaddr en0).nip.io
+oc expose service/mobile-backend --name=exposed-mobile-backend-route --hostname=mobile-backend-incident-demo.$LOCAL_IP_ADDRESS.nip.io
 
 #Remote route for supervisor server
-oc expose service/supervisor-server --name=exposed-supervisor-route --hostname=supervisor-server-incident-demo.$(ipconfig getifaddr en0).nip.io
+oc expose service/supervisor-server --name=exposed-supervisor-route --hostname=supervisor-server-incident-demo.$LOCAL_IP_ADDRESS.nip.io
