@@ -31,10 +31,10 @@ oc login -u system:admin
 oc create -f setup/nexus3-persistent-template.yaml -n openshift
 #oc create -f setup/jboss-image-streams.json -n openshift
 #oc import-image my-sonatype/nexus-repository-manager --from=registry.connect.redhat.com/sonatype/nexus-repository-manager --confirm
-oc import-image my-rhscl/nodejs-8-rhel7 --from=registry.access.redhat.com/rhscl/nodejs-8-rhel7 --confirm
-oc import-image my-jboss-decisionserver-6/decisionserver64-openshift --from=registry.access.redhat.com/jboss-decisionserver-6/decisionserver64-openshift --confirm
-oc import-image my-jboss-processserver-6/processserver64-openshift --from=registry.access.redhat.com/jboss-processserver-6/processserver64-openshift --confirm
-oc import-image my-jboss-webserver-3/webserver31-tomcat8-openshift --from=registry.access.redhat.com/jboss-webserver-3/webserver31-tomcat8-openshift --confirm
+#oc import-image my-rhscl/nodejs-8-rhel7 --from=registry.access.redhat.com/rhscl/nodejs-8-rhel7 --confirm
+#oc import-image my-jboss-decisionserver-6/decisionserver64-openshift --from=registry.access.redhat.com/jboss-decisionserver-6/decisionserver64-openshift --confirm
+#oc import-image my-jboss-processserver-6/processserver64-openshift --from=registry.access.redhat.com/jboss-processserver-6/processserver64-openshift --confirm
+#oc import-image my-jboss-webserver-3/webserver31-tomcat8-openshift --from=registry.access.redhat.com/jboss-webserver-3/webserver31-tomcat8-openshift --confirm
 
 #Create the project
 echo "logging into minishift"
@@ -84,12 +84,20 @@ oc new-app registry.access.redhat.com/rhscl/nodejs-8-rhel7~https://github.com/cn
 oc expose svc/mobile-backend
 
 #Expose remote routes for use by mobile devices
-read -p "Please enter your local IP address: (e.g. 192.168.99.55) NO TRAILING SLASHES!" LOCAL_IP_ADDRESS
+read -p "Please enter your local IP address (e.g. 192.168.99.55): " LOCAL_IP_ADDRESS
 echo "Using local IP address[$LOCAL_IP_ADDRESS] to setup exposed routes ..."
 
 #Delete any existing remotely exposed routes
-oc delete routes exposed-mobile-backend-route
-oc delete routes exposed-supervisor-route
+export EXPOSED_ROUTE="`oc get route exposed-supervisor-route 2>&1`"
+
+if [[ "$EXPOSED_ROUTE" != *"NotFound"* && "$EXPOSED_ROUTE" != *"Error"* ]]
+then
+    echo "Deleted Existing Routes to be recreated"
+    oc delete routes exposed-mobile-backend-route
+	oc delete routes exposed-supervisor-route
+
+    exit
+fi
 
 #Remote route for mobile backend
 oc expose service/mobile-backend --name=exposed-mobile-backend-route --hostname=mobile-backend-incident-demo.$LOCAL_IP_ADDRESS.nip.io
