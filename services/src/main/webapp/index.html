@@ -57,7 +57,21 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-6">.col-md-6</div>
+						<div class="col-md-6">
+							<div class="well well-sm">
+								<div class="form-group">
+									<label for="pId">Process Id</label>
+									<input type="text" class="form-control" id="pId" placeholder="1" size="5" ng-model="vm.processId">&nbsp;
+									<label for="pContainerId">Container Id</label>
+									<input type="text" class="form-control" id="pContainerId" placeholder="IncidentProcessorContainer" size="25" ng-model="vm.containerId">&nbsp;
+									<button class="btn btn-default" ng-click="vm.load()">Update</button>
+									&nbsp; &nbsp;
+									<input type="checkbox" class="form-control" p="pAutoUpdate" ng-model="vm.autoUpdate" /> &nbsp;
+									<label for="pAutoUpdate">Auto Update?</label>
+									<span ng-show="vm.autoUpdate">({{20 - vm.updateCount}} remaining)</span>
+								</div>
+							</div>
+						</div>
 						<div class="col-md-6">
 							<div class="well well-sm">
 								<form>
