@@ -63,8 +63,8 @@
 								<form>
 									<div class="form-group">
 										<label for="pApprovalComments">Supervisor comments: </label>
-										<input type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed" placeholder="Approval Comments"
-										/>
+										<input class="form-control" type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
+										 placeholder="Approval Comments" />
 									</div>
 									<div class="form-group">
 										<input type="radio" name="actions" id="acceptedRadio" ng-model="vm.remediationAccepted" ng-value="true" ng-disabled="!vm.completed">
