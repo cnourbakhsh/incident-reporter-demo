@@ -46,9 +46,10 @@
 				if (data['process-instance-variables'] && data['process-instance-variables'].remediationSuccessful) {
 					vm.assessorResponse = {
 						remediationSuccessful: data['process-instance-variables'].remediationSuccessful,
-						remediationAccepted: data['process-instance-variables'].remediationAccepted
+						incidentStatus: data['process-instance-variables'].incidentStatus,
 					};
 				}
+				console.log('vm.assessorResponse: ', vm.assessorResponse);
 
 				vm.comments = [];
 				vm.photos = [];
