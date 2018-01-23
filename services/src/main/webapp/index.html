@@ -100,74 +100,40 @@
 							</div>
 						</div>
 					</div>
-
-					<!-- 							<div class="form-group">
-								<label for="pId">Process Id</label>
-								<input type="text" class="form-control" id="pId" placeholder="1" size="5" ng-model="vm.processId">&nbsp;
-								<label for="pContainerId">Container Id</label>
-								<input type="text" class="form-control" id="pContainerId" placeholder="IncidentProcessorContainer" size="25" ng-model="vm.containerId">&nbsp;
-								<button class="btn btn-default" ng-click="vm.load()">Update</button>
-								&nbsp; &nbsp;
-								<input type="checkbox" class="form-control" p="pAutoUpdate" ng-model="vm.autoUpdate" /> &nbsp;
-								<label for="pAutoUpdate">Auto Update?</label>
-								<span ng-show="vm.autoUpdate">({{20 - vm.updateCount}} remaining)</span>
-								&nbsp; &nbsp;
-
-								<div class="input-group">
-									<input type="text" class="form-control" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
-									 placeholder="Approval Comments" />
-									<div class="input-group-addon">
-										<input type="checkbox" id="pRemediationAccepted" ng-model="vm.remediationAccepted" ng-disabled="!vm.completed"> Accepted?
-									</div>
-									<div class="input-group-btn">
-										<button class="btn btn-default" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
-									</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div id="image">
+								<br />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div id="comments">
+								<h3>Comments</h3>
+								<ul class="list-group">
+									<li ng-repeat="comment in vm.comments track by $index" class="list-group-item">{{comment}}</li>
+								</ul>
+								<div ng-if="vm.comments.length < 1">
+									<i>No comments added.</i>
 								</div>
-
-								<div class="input-group">
-									<span class="input-group-addon">
-										<input type="radio">
-									</span>
-									<span class="input-group-addon">
-										<input type="radio">
-									</span>
-									<input type="text" class="form-control" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
-									 placeholder="Approval Comments">
-									<span class="input-group-btn">
-										<button class="btn btn-default" type="button" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
-									</span>
-								</div>
-							</div> -->
-				</div>
-				<div class="row">
-					<div id="image">
-						<br />
-					</div>
-
-					<div id="comments">
-						<h3>Comments</h3>
-						<ul class="list-group">
-							<li ng-repeat="comment in vm.comments track by $index" class="list-group-item">{{comment}}</li>
-						</ul>
-						<div ng-if="vm.comments.length < 1">
-							<i>No comments added.</i>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row" style="padding-bottom: 50px; padding-left: 100px">
-					<div>
-						<h3>Photo Thumbnails</h3>
-					</div>
-					<div id="gallery">
-						<div ng-repeat="photo in vm.photos track by $index" class="img-wrapper">
-							<a target="_blank" href="{{photo}}">
-								<img class="img-rounded" ng-src="{{photo}}" height="100px" style="padding-left: 20px;">
-							</a>
+					<div class="row" style="padding-bottom: 50px; padding-left: 100px">
+						<div class="col-md-12">
+							<div>
+								<h3>Photo Thumbnails</h3>
+							</div>
+							<div id="gallery">
+								<div ng-repeat="photo in vm.photos track by $index" class="img-wrapper">
+									<a target="_blank" href="{{photo}}">
+										<img class="img-rounded" ng-src="{{photo}}" height="100px" style="padding-left: 20px;">
+									</a>
+								</div>
+							</div>
+							<div ng-if="vm.photos.length < 1">
+								<i>No photos uploaded.</i>
+							</div>
 						</div>
-					</div>
-
-					<div ng-if="vm.photos.length < 1">
-						<i>No photos uploaded.</i>
 					</div>
 				</div>
 			</div>
