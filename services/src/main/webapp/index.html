@@ -82,17 +82,17 @@
 								</div>
 
 								<div class="input-group">
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Option 1</label>
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Option 2</label>
-								</div>
-
-								<div class="input-group">
 									<span class="input-group-addon">
-										<input type="radio" aria-label="...">
+										<input type="radio">
 									</span>
-									<input type="text" class="form-control" aria-label="...">
+									<span class="input-group-addon">
+										<input type="radio">
+									</span>
+									<input type="text" class="form-control" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
+									 placeholder="Approval Comments">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
+									</span>
 								</div>
 								<!-- /input-group -->
 
