@@ -21,6 +21,8 @@
 		vm.approvalComments = 'Approval from supervisor app!';
 		vm.remediationAccepted = true;
 
+		vm.assessorResponse = {};
+
 		vm.load = load;
 		vm.submit = submit;
 
@@ -40,6 +42,14 @@
 				}
 			}).then(function successCallback(response) {
 				var data = response.data;
+
+				if (data['process-instance-variables'] && data['process-instance-variables'].remediationSuccessful) {
+					vm.assessorResponse = {
+						remediationSuccessful: data['process-instance-variables'].remediationSuccessful,
+						incidentStatus: data['process-instance-variables'].incidentStatus,
+					};
+				}
+				console.log('vm.assessorResponse: ', vm.assessorResponse);
 
 				vm.comments = [];
 				vm.photos = [];
