@@ -57,7 +57,7 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-4">
 							<div class="well well-sm">
 								<div class="form-group">
 									<label for="pId">Process Id</label>
@@ -77,9 +77,13 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="well well-sm">
+						<div class="col-md-4">
+							<div class="well well-sm" ng-if="vm.assessorResponse.remediationSuccessful === true">
 								<form>
+									<div class="form-group">
+										<label>Assessor Response</label>
+										<label>{{vm.assessorResponse.remediationAccepted}}</label>
+									</div>
 									<div class="form-group">
 										<label for="pApprovalComments">Supervisor comments</label>
 										<input class="form-control" type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
@@ -99,21 +103,26 @@
 								</form>
 							</div>
 						</div>
+						<div class="col-md-4"></div>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-							<div id="image">
-								<br />
+							<div class="well well-sm">
+								<div id="image">
+									<br />
+								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
-							<div id="comments">
-								<h3>Comments</h3>
-								<ul class="list-group">
-									<li ng-repeat="comment in vm.comments track by $index" class="list-group-item">{{comment}}</li>
-								</ul>
-								<div ng-if="vm.comments.length < 1">
-									<i>No comments added.</i>
+							<div class="well well-sm">
+								<div id="comments">
+									<h3>Comments</h3>
+									<ul class="list-group">
+										<li ng-repeat="comment in vm.comments track by $index" class="list-group-item">{{comment}}</li>
+									</ul>
+									<div ng-if="vm.comments.length < 1">
+										<i>No comments added.</i>
+									</div>
 								</div>
 							</div>
 						</div>
