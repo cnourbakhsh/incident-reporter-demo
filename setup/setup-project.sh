@@ -31,10 +31,10 @@ oc login -u system:admin
 oc create -f setup/nexus3-persistent-template.yaml -n openshift
 #oc create -f setup/jboss-image-streams.json -n openshift
 #oc import-image my-sonatype/nexus-repository-manager --from=registry.connect.redhat.com/sonatype/nexus-repository-manager --confirm
-#oc import-image my-rhscl/nodejs-8-rhel7 --from=registry.access.redhat.com/rhscl/nodejs-8-rhel7 --confirm
-#oc import-image my-jboss-decisionserver-6/decisionserver64-openshift --from=registry.access.redhat.com/jboss-decisionserver-6/decisionserver64-openshift --confirm
-#oc import-image my-jboss-processserver-6/processserver64-openshift --from=registry.access.redhat.com/jboss-processserver-6/processserver64-openshift --confirm
-#oc import-image my-jboss-webserver-3/webserver31-tomcat8-openshift --from=registry.access.redhat.com/jboss-webserver-3/webserver31-tomcat8-openshift --confirm
+oc import-image my-rhscl/nodejs-8-rhel7 --from=registry.access.redhat.com/rhscl/nodejs-8-rhel7 --confirm
+oc import-image my-jboss-decisionserver-6/decisionserver64-openshift --from=registry.access.redhat.com/jboss-decisionserver-6/decisionserver64-openshift --confirm
+oc import-image my-jboss-processserver-6/processserver64-openshift --from=registry.access.redhat.com/jboss-processserver-6/processserver64-openshift --confirm
+oc import-image my-jboss-webserver-3/webserver31-tomcat8-openshift --from=registry.access.redhat.com/jboss-webserver-3/webserver31-tomcat8-openshift --confirm
 
 #Create the project
 echo "logging into minishift"
@@ -67,6 +67,11 @@ echo "Build and deploy the domain model ..."
 mvn --settings domain-settings.xml deploy
 cd ..
 
+
+#Expose remote routes for use by mobile devices
+read -p "Please enter your local IP address (e.g. 192.168.99.55): " LOCAL_IP_ADDRESS
+echo "Using local IP address[$LOCAL_IP_ADDRESS] to setup exposed routes ..."
+
 #Deploy the Decision Server
 oc new-app registry.access.redhat.com/jboss-decisionserver-6/decisionserver64-openshift~https://github.com/cnourbakhsh/incident-reporter-demo.git#consolidated --context-dir=decisions -e KIE_SERVER_USER='decider' -e KIE_SERVER_PASSWORD='decider#99' --name=decision-server
 oc expose svc/decision-server
@@ -80,12 +85,10 @@ oc new-app registry.access.redhat.com/jboss-webserver-3/webserver31-tomcat8-open
 oc expose svc/supervisor-server
 
 #Deploy the Mobile Backend
-oc new-app registry.access.redhat.com/rhscl/nodejs-8-rhel7~https://github.com/cnourbakhsh/incident-reporter-demo.git#consolidated --context-dir=backend -e DECISION_SERVER_HOST='decision-server-incident-demo.'$MINISHIFT_URL -e DECISION_CONTAINER_ID=4c1342a8827bf46033cb95f0bdf27f0b -e DECISION_BASIC_AUTH='Basic ZGVjaWRlcjpkZWNpZGVyIzk5' -e PROCESS_SERVER_HOST='process-server-incident-demo.'$MINISHIFT_URL -e PROCESS_CONTAINER_ID=1776e960572610314f3f813a5dbb736d -e PROCESS_BASIC_AUTH='Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==' --name=mobile-backend -e SERVICES_SERVER_HOST='supervisor-server-incident-demo.'$MINISHIFT_URL -e EXPOSED_SERVICES_SERVER_HOST='supervisor-server-incident-demo.'$(ipconfig getifaddr en0) -e OPENSHIFT_NODEJS_PORT=8080 -e OPENSHIFT_NODEJS_IP=0.0.0.0
+oc new-app registry.access.redhat.com/rhscl/nodejs-8-rhel7~https://github.com/cnourbakhsh/incident-reporter-demo.git#consolidated --context-dir=backend -e DECISION_SERVER_HOST='decision-server-incident-demo.'$MINISHIFT_URL -e DECISION_CONTAINER_ID=4c1342a8827bf46033cb95f0bdf27f0b -e DECISION_BASIC_AUTH='Basic ZGVjaWRlcjpkZWNpZGVyIzk5' -e PROCESS_SERVER_HOST='process-server-incident-demo.'$MINISHIFT_URL -e PROCESS_CONTAINER_ID=1776e960572610314f3f813a5dbb736d -e PROCESS_BASIC_AUTH='Basic cHJvY2Vzc29yOnByb2Nlc3NvciM5OQ==' --name=mobile-backend -e SERVICES_SERVER_HOST='supervisor-server-incident-demo.'$MINISHIFT_URL -e EXPOSED_SERVICES_SERVER_HOST='supervisor-server-incident-demo.'$LOCAL_IP_ADDRESS -e OPENSHIFT_NODEJS_PORT=8080 -e OPENSHIFT_NODEJS_IP=0.0.0.0
 oc expose svc/mobile-backend
 
-#Expose remote routes for use by mobile devices
-read -p "Please enter your local IP address (e.g. 192.168.99.55): " LOCAL_IP_ADDRESS
-echo "Using local IP address[$LOCAL_IP_ADDRESS] to setup exposed routes ..."
+
 
 #Delete any existing remotely exposed routes
 export EXPOSED_ROUTE="`oc get route exposed-supervisor-route 2>&1`"
