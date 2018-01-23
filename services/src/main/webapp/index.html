@@ -71,33 +71,33 @@
 									<button class="btn btn-default" ng-click="vm.load()">Update</button>
 								</div>
 								<div class="form-group">
-									<input type="checkbox" class="form-control" p="pAutoUpdate" ng-model="vm.autoUpdate" />
+									<input type="checkbox" p="pAutoUpdate" ng-model="vm.autoUpdate" />
 									<label for="pAutoUpdate">Auto Update</label>
 									<span ng-show="vm.autoUpdate">({{20 - vm.updateCount}} remaining)</span>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="well well-sm">
-							<form>
-								<div class="form-group">
-									<label for="pApprovalComments">Supervisor comments</label>
-									<input class="form-control" type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
-									 placeholder="Approval Comments" />
-								</div>
-								<div class="form-group">
-									<input type="radio" name="actions" id="acceptedRadio" ng-model="vm.remediationAccepted" ng-value="true" ng-disabled="!vm.completed">
-									<label for="acceptedRadio">Accepted</label>
-								</div>
-								<div class="form-group">
-									<input type="radio" name="actions" id="rejectedRadio" ng-model="vm.remediationAccepted" ng-value="false" ng-disabled="!vm.completed">
-									<label for="rejectedRadio">Rejected</label>
-								</div>
-								<div class="form-group">
-									<button class="btn btn-default" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
-								</div>
-							</form>
+						<div class="col-md-6">
+							<div class="well well-sm">
+								<form>
+									<div class="form-group">
+										<label for="pApprovalComments">Supervisor comments</label>
+										<input class="form-control" type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
+										 placeholder="Approval Comments" />
+									</div>
+									<div class="form-group">
+										<input type="radio" name="actions" id="acceptedRadio" ng-model="vm.remediationAccepted" ng-value="true" ng-disabled="!vm.completed">
+										<label for="acceptedRadio">Accepted</label>
+									</div>
+									<div class="form-group">
+										<input type="radio" name="actions" id="rejectedRadio" ng-model="vm.remediationAccepted" ng-value="false" ng-disabled="!vm.completed">
+										<label for="rejectedRadio">Rejected</label>
+									</div>
+									<div class="form-group">
+										<button class="btn btn-default" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
 
