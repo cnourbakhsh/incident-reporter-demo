@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+cd /home/ec2-user/incident-reporter-demo
+
+git checkout consolidated
+git pull origin consolidated
+
+# for aws linux 2 you need to start docker manually
+#sudo service docker start
+
 sudo mount --make-shared /
 docker ps
 rm -rf .kube/
