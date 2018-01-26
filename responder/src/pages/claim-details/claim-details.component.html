@@ -7,7 +7,10 @@
         </ion-buttons>
         <ion-title>Ticket Details</ion-title>
         <ion-buttons end>
-            <button *ngIf="claim.incidentStatus === 'IN_PROGRESS'" ion-button color="white" (click)='onCloseTicket()'>Complete Ticket</button>
+            <button *ngIf="claim.incidentStatus === 'IN_PROGRESS'" ion-button color="white" (click)='onCloseTicket()'>
+                <!-- Complete Ticket -->
+                <ion-icon name="arrow-dropright-circle" style="zoom:1.5;"></ion-icon>
+            </button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -65,13 +68,14 @@
             <ion-item>
                 Comments
                 <button ion-button color="dark" style="float: right" (click)="saveComment()" *ngIf="claim.incidentStatus === 'IN_PROGRESS'">Save Comment</button>
-            </ion-item>
-            <ion-item *ngIf="claim.incidentComments != undefined">
-                <ion-item *ngFor="let comment of claim.incidentComments">{{comment}}</ion-item>
-            </ion-item>
+            </ion-item>            
             <ion-item *ngIf="claim.incidentStatus === 'IN_PROGRESS'">
                 <ion-label floating>Add Comment</ion-label>
                 <ion-textarea [(ngModel)]="comment"></ion-textarea>
+            </ion-item>
+            <ion-item *ngIf="claim.incidentComments != undefined">
+                Previous Comments
+                <ion-item *ngFor="let comment of claim.incidentComments"> - {{comment}}</ion-item>
             </ion-item>
         </ion-list>
     </div>
