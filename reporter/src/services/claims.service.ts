@@ -4,11 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import { environment } from './environment';
 
 @Injectable()
 export class ClaimService {
 
-    public mobileBackendURL: string = '';
+    public mobileBackendURL: string = environment.mobileBackendUrl ? environment.mobileBackendUrl : '';
 
     constructor(private http: Http) { }
 
