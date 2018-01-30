@@ -2,13 +2,15 @@
     <ion-toolbar color="dark">
         <ion-buttons start>
             <button *ngIf='showIncident' ion-button color="white" (click)='onClose();'>
-                <ion-icon name="close-circle"></ion-icon>
+                <ion-icon name="close-circle"> Close</ion-icon>
             </button>
         </ion-buttons>
         <ion-title>New Incident</ion-title>
         <ion-buttons end>
-            <button *ngIf='incident.type != null && showIncident' ion-button color="white" (click)='onSubmit()'>Submit</button>
-            <button *ngIf='loadQuestions' ion-button color="white" (click)='onFinish()'>Finish</button>
+            <button *ngIf='incident.type != null && showIncident' ion-button color="white" (click)='onSubmit()'>
+                <ion-icon name="checkmark-circle"> Submit</ion-icon></button>
+            <button *ngIf='loadQuestions' ion-button color="white" (click)='onFinish()'>
+                <ion-icon name="checkmark-circle-outline"> Finish</ion-icon></button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
