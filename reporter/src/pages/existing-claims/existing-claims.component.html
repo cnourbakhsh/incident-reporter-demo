@@ -2,13 +2,13 @@
     <ion-toolbar color="dark">
         <ion-buttons start>
             <button ion-button color="white" (click)='onHelp()'>
-                <ion-icon name="home" style="zoom:1.0;"></ion-icon>
+                <ion-icon name="home" style="zoom:1.2;"></ion-icon>
             </button>
         </ion-buttons>
         <ion-title>Reported Incidents</ion-title>
         <ion-buttons end>
             <button ion-button color="white" (click)='onNew()'>
-                <ion-icon name="add-circle"> New</ion-icon>
+                <ion-icon name="add-circle"> New </ion-icon>
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -34,7 +34,7 @@
             <ion-card-header>
                 Claim {{claim.processId}} for {{claim.incident.incidentType}}
                 <button class="btn-sm" style="float: right" (click)="onLoadClaimDetails(claim)">
-                    <ion-icon name="arrow-dropright-circle" style="zoom:2.0;"></ion-icon>                
+                    <ion-icon name="arrow-dropright-circle" style="zoom:1.4;"></ion-icon>                
                 </button>
             </ion-card-header>
             <div class="item item-text-wrap">
