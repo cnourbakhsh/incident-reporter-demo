@@ -44,6 +44,16 @@
 			display: block;
 			z-index: 999;
 		}
+
+		.input-group{
+			display: inline-table;
+			margin-bottom: 15px;
+			margin-left: 10px;
+		}
+
+		.input-group-addon{
+			font-weight: bold;
+		}
 	</style>
 </head>
 
@@ -60,21 +70,21 @@
 						<div class="col-md-4">
 							<div class="well well-sm">
 							<form>
-								<div class="form-group row">
-									<label for="pId">Process Id: </label>
-									<input type="text" class="form-control" id="pId" placeholder="1" ng-model="vm.processId">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1">Process ID: </span>
+									<input type="text" class="form-control" id="pId" placeholder="1" ng-model="vm.processId" style = "width:25%">
 								</div>
-								<div class="form-group row">
-									<label for="pContainerId">Container Id: </label>
-									<input type="text" readonly class="form-control-plaintext" id="pContainerId" placeholder="IncidentProcessorContainer" ng-model="vm.containerId">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1">Container ID: </span>
+									<input type="text" readonly class="form-control" id="pContainerId" placeholder="IncidentProcessorContainer" ng-model="vm.containerId">
 								</div>
-								<div class="form-group row">
-									<label for="pContainerId">Claim Type: </label>
-									<input type="text" readonly class="form-control-plaintext" id="pContainerId" placeholder="IncidentProcessorContainer" ng-model="vm.containerId">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1">Claim Type: </span>
+									<input type="text" readonly class="form-control" id="pContainerId" placeholder="Windshield" ng-model="vm.containerId">
 								</div>
-								<div class="form-group row">
+								<div class="input-group">
 									<button class="btn btn-default" ng-click="vm.load()">Update</button>  &NonBreakingSpace; 
-									<input type="checkbox" p="pAutoUpdate" ng-model="vm.autoUpdate" />
+									<input type="checkbox" p="pAutoUpdate" ng-model="vm.autoUpdate" />&NonBreakingSpace;
 									<label for="pAutoUpdate">Auto Update</label>
 									<span ng-show="vm.autoUpdate">({{20 - vm.updateCount}} remaining)</span>
 								</div>
