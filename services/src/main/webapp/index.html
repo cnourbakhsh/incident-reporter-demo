@@ -18,12 +18,13 @@
 		}
 
 		#comments {
-			width: 500px;
+			width: 100%;
 			/* float: left; */
 		}
 
 		.form-group {
 			margin-left: 20px;
+			margin-bottom: 10px;
 		}
 
 		.img-wrapper {
@@ -44,6 +45,20 @@
 			display: block;
 			z-index: 999;
 		}
+
+		.input-group{
+			display: inline-table;
+			margin-bottom: 15px;
+			margin-left: 10px;
+		}
+
+		.input-group-addon{
+			font-weight: bold;
+		}
+
+		.list-group-item{
+			background-color: none; 
+		}
 	</style>
 </head>
 
@@ -59,22 +74,22 @@
 					<div class="row">
 						<div class="col-md-4">
 							<div class="well well-sm">
-								<div class="form-group">
-									<label for="pId">Process Id</label>
-									<input type="text" class="form-control" id="pId" placeholder="1" size="5" ng-model="vm.processId">
+							<form>
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1">Process ID: </span>
+									<input type="text" class="form-control" id="pId" placeholder="1" ng-model="vm.processId" style = "width:25%">
 								</div>
-								<div class="form-group">
-									<label for="pContainerId">Container Id</label>
-									<input type="text" class="form-control" id="pContainerId" placeholder="IncidentProcessorContainer" size="25" ng-model="vm.containerId">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1">Container ID: </span>
+									<input type="text" readonly class="form-control" id="pContainerId" placeholder="IncidentProcessorContainer" ng-model="vm.containerId">
 								</div>
-								<div class="form-group">
-									<button class="btn btn-default" ng-click="vm.load()">Update</button>
-								</div>
-								<div class="form-group">
-									<input type="checkbox" p="pAutoUpdate" ng-model="vm.autoUpdate" />
+								<div class="input-group">
+									<button class="btn btn-default" ng-click="vm.load()">Update</button>  &NonBreakingSpace; 
+									<input type="checkbox" p="pAutoUpdate" ng-model="vm.autoUpdate" />&NonBreakingSpace;
 									<label for="pAutoUpdate">Auto Update</label>
 									<span ng-show="vm.autoUpdate">({{20 - vm.updateCount}} remaining)</span>
 								</div>
+							</form>
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -85,52 +100,47 @@
 										<label>{{vm.assessorResponse.incidentStatus}}</label>
 									</div>
 									<div class="form-group">
-										<label for="pApprovalComments">Supervisor comments</label>
+										<label for="pApprovalComments">Supervisor comments: </label>
 										<input class="form-control" type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
 										 placeholder="Approval Comments" />
 									</div>
 									<div class="form-group">
 										<input type="radio" name="actions" id="acceptedRadio" ng-model="vm.remediationAccepted" ng-value="true" ng-disabled="!vm.completed">
-										<label for="acceptedRadio">Accepted</label>
-									</div>
-									<div class="form-group">
+										<label for="acceptedRadio">Accepted</label> &NonBreakingSpace; 
 										<input type="radio" name="actions" id="rejectedRadio" ng-model="vm.remediationAccepted" ng-value="false" ng-disabled="!vm.completed">
-										<label for="rejectedRadio">Rejected</label>
-									</div>
-									<div class="form-group">
+										<label for="rejectedRadio">Rejected</label> &NonBreakingSpace; 
 										<button class="btn btn-default" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
 									</div>
 								</form>
 							</div>
 						</div>
-						<div class="col-md-4"></div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="well well-sm">
-								<div id="image">
-									<br />
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="well well-sm">
+						<div class="col-md-4">							
+							<div class="well well-sm" ng-show="vm.assessorResponse.remediationSuccessful == 'true'">
 								<div id="comments">
-									<h3>Comments</h3>
+									<label>Comments</label>
 									<ul class="list-group">
 										<li ng-repeat="comment in vm.comments track by $index" class="list-group-item">{{comment}}</li>
 									</ul>
 									<div ng-if="vm.comments.length < 1">
 										<i>No comments added.</i>
 									</div>
-								</div>
+								</div>							
 							</div>
 						</div>
 					</div>
-					<div class="row" style="padding-bottom: 50px; padding-left: 100px">
+					<div class="row">
 						<div class="col-md-12">
+							<div class="well well-sm">
+								<div id="image">
+									<br />
+								</div>
+							</div>
+						</div>						
+					</div>
+					<div class="row" style="padding-bottom: 50px; padding-left: 50px">
+						<div class="col-md-12" ng-show="vm.assessorResponse.remediationSuccessful == 'true'">
 							<div>
-								<h3>Photo Thumbnails</h3>
+								<label>Photo Thumbnails</label>
 							</div>
 							<div id="gallery">
 								<div ng-repeat="photo in vm.photos track by $index" class="img-wrapper">

@@ -2,7 +2,7 @@
     <ion-toolbar color="danger">
         <ion-buttons start>
             <button ion-button color="white" (click)='onHelp()'>
-                <ion-icon name="help-circle"></ion-icon>
+                <ion-icon name="home" style="zoom:1.2;"></ion-icon>
             </button>
         </ion-buttons>
         <ion-title>Work Tickets</ion-title>
@@ -35,25 +35,18 @@
     <div class="incident-content-area" *ngIf="claims && claims.length > 0">
         <ion-card *ngFor="let claim of claims | orderBy : '-processId'">
             <ion-card-header>
-                {{claim.incident.incidentType}}
+                Claim {{claim.processId}} for {{claim.incident.incidentType}}
                 <button class="btn-sm" style="float: right" (click)="onLoadClaimDetails(claim)">
-                    <ion-icon name="arrow-dropright-circle" style="zoom:2.0;"></ion-icon>
+                    <ion-icon name="arrow-dropright-circle" style="zoom:1.5;"></ion-icon>
                 </button>
             </ion-card-header>
             <div class="item item-text-wrap">
                 <ion-list>
                     <ion-item>
-                        <strong>Process Id</strong>
-                        <br>{{claim.processId}}</ion-item>
+                        {{claim.incident.incidentDate | date:'EEE, MMM d, y h:mm a'}}</ion-item>
                     <ion-item>
-                        <strong>Date</strong>
-                        <br>{{claim.incident.incidentDate | date:'short'}}</ion-item>
-                    <ion-item>
-                        <strong>Status</strong>
-                        <br>
-                        <strong>{{claim.incidentStatus}}</strong>
-                        <ion-icon name="close-circled" *ngIf="claim.incidentStatus === 'COMPLETED'"></ion-icon>
-                        <ion-icon name="alert" *ngIf="claim.incidentStatus === 'IN_PROGRESS'"></ion-icon>
+                        <div style="color:green" *ngIf="claim.incidentStatus === 'COMPLETED'"><strong>{{claim.incidentStatus}}</strong></div>
+                        <div style="color:orange" *ngIf="claim.incidentStatus === 'IN_PROGRESS'"><strong>{{claim.incidentStatus}}</strong></div>
                     </ion-item>
                 </ion-list>
             </div>

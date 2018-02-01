@@ -2,12 +2,15 @@
     <ion-toolbar color="danger">
         <ion-buttons start>
             <button ion-button color="white" (click)='onBack()'>
-                <ion-icon name="arrow-dropleft-circle" style="zoom:1.5;"></ion-icon>
+                <ion-icon name="arrow-dropleft-circle"> Back</ion-icon>
             </button>
         </ion-buttons>
         <ion-title>Ticket Details</ion-title>
         <ion-buttons end>
-            <button *ngIf="claim.incidentStatus === 'IN_PROGRESS'" ion-button color="white" (click)='onCloseTicket()'>Complete Ticket</button>
+            <button *ngIf="claim.incidentStatus === 'IN_PROGRESS'" ion-button color="white" (click)='onCloseTicket()'>
+                <!-- Complete Ticket -->
+                <ion-icon name="arrow-dropright-circle"> Next</ion-icon>
+            </button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -49,12 +52,12 @@
                 </div>
             </ion-item>
             <ion-item>Photos</ion-item>
-            <ion-item *ngIf="claim.incidentStatus === 'IN_PROGRESS'">
-                <button ion-button color="dark" (click)="takePhoto(1)">Take Photo
-                </button>
-                <button ion-button color="dark" (click)="takePhoto(0)">Select Photo
-                </button>
-            </ion-item>
+            
+            <div class="button-bar">
+                <button ion-button *ngIf="claim.incidentStatus === 'IN_PROGRESS'" (click)="takePhoto(1)">Take Photo</button>
+                <button ion-button *ngIf="claim.incidentStatus === 'IN_PROGRESS'" (click)="takePhoto(0)">Select Photo</button>
+            </div>
+            
             <div class="incident-photo-gallery">
                 <div *ngFor="let photo of claim.photos">
                     <img width="30%" src={{photo}}>
@@ -63,15 +66,18 @@
             <br style="clear:both" />
             <br />
             <ion-item>
-                Comments
-                <button ion-button color="dark" style="float: right" (click)="saveComment()" *ngIf="claim.incidentStatus === 'IN_PROGRESS'">Save Comment</button>
-            </ion-item>
-            <ion-item *ngIf="claim.incidentComments != undefined">
-                <ion-item *ngFor="let comment of claim.incidentComments">{{comment}}</ion-item>
-            </ion-item>
+                Comments                
+            </ion-item>            
             <ion-item *ngIf="claim.incidentStatus === 'IN_PROGRESS'">
                 <ion-label floating>Add Comment</ion-label>
                 <ion-textarea [(ngModel)]="comment"></ion-textarea>
+            </ion-item>
+            <div class="button-bar">
+                <button ion-button (click)="saveComment()" *ngIf="claim.incidentStatus === 'IN_PROGRESS'">Save Comment</button>
+            </div>
+            <ion-item *ngIf="claim.incidentComments != undefined">
+                <!-- Previous Comments: -->
+                <ion-item *ngFor="let comment of claim.incidentComments"> - {{comment}}</ion-item>
             </ion-item>
         </ion-list>
     </div>
