@@ -1,1 +1,5 @@
 target
+backend/.jshintrc
+backend/.eslintrc.json
+backend/package-lock.json
+backend/.vscode/launch.json
