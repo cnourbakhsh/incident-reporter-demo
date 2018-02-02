@@ -18,7 +18,7 @@
 		vm.autoUpdate = false;
 		vm.completed = false;
 
-		vm.approvalComments = 'Approval from supervisor app!';
+		vm.approvalComments = 'Supervisor Comments';
 		vm.remediationAccepted = true;
 
 		vm.assessorResponse = {};
@@ -33,6 +33,7 @@
 
 		function loadVars() {
 			$log.info('loadVars called');
+			vm.assessorResponse = {};
 			$http({
 				method: 'GET',
 				withCredentials: true,
