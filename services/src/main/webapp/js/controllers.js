@@ -44,7 +44,8 @@
 			}).then(function successCallback(response) {
 				var data = response.data;
 
-				if (data['process-instance-variables'] && data['process-instance-variables'].remediationSuccessful) {
+				// if (data['process-instance-variables'] && data['process-instance-variables'].remediationSuccessful) {
+				if (data['process-instance-variables']) {	
 					vm.assessorResponse = {
 						remediationSuccessful: data['process-instance-variables'].remediationSuccessful,
 						incidentStatus: data['process-instance-variables'].incidentStatus,
