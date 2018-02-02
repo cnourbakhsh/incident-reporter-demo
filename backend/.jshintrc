@@ -21,7 +21,8 @@
     "console": true,
     "process": true,
     "exports": true,
-    "require": true
+    "require": true,
+    "module": true
   },
   "globalstrict": true,
   "immed": true,
