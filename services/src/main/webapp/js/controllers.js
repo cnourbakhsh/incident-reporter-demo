@@ -55,6 +55,7 @@
 					vm.approvalComments = data['process-instance-variables'].finalComments;
 				}
 				console.log('vm.assessorResponse: ', vm.assessorResponse);
+				console.log('vm.approvalComments: ', vm.approvalComments);
 
 				vm.comments = [];
 				vm.photos = [];
