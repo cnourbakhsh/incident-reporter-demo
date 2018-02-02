@@ -88,21 +88,24 @@
 							<!-- <div class="well well-sm" ng-show="vm.assessorResponse.remediationSuccessful == 'true'"> -->
 							<div class="well well-sm">
 								<form>
-									<div class="form-group">
+									<div class="form-group" ng-show="vm.processIdExist">
 										<label>Assessor Response: </label>
 										<label>{{vm.assessorResponse.incidentStatus}}</label>
 									</div>
-									<div class="form-group">
-										<label for="pApprovalComments">Supervisor comments: </label>
+									<div class="form-group" ng-show="vm.processIdExist">
+										<label for="pApprovalComments">Supervisor Comments: </label>
 										<input class="form-control" type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
 										 placeholder="Supervisor Comments" />
 									</div>
-									<div class="form-group">
+									<div class="form-group" ng-show="vm.processIdExist">
 										<input type="radio" name="actions" id="acceptedRadio" ng-model="vm.remediationAccepted" ng-value="true" ng-disabled="!vm.completed">
 										<label for="acceptedRadio">Accepted</label> &NonBreakingSpace; 
 										<input type="radio" name="actions" id="rejectedRadio" ng-model="vm.remediationAccepted" ng-value="false" ng-disabled="!vm.completed">
 										<label for="rejectedRadio">Rejected</label> &NonBreakingSpace; 
 										<button class="btn btn-default" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
+									</div>
+									<div class="form-group" ng-if="!vm.processIdExist" style="height: 135px;"><br>
+										<span style = "color: red; font-weight: bold;">No Claim Record found.</span>
 									</div>
 								</form>
 							</div>

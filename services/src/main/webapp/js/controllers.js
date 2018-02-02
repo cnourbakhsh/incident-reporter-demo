@@ -17,6 +17,7 @@
 		vm.updateCount = 0;
 		vm.autoUpdate = false;
 		vm.completed = false;
+		vm.processIdExist = true;
 
 		vm.approvalComments = 'Supervisor Comments';
 		vm.remediationAccepted = true;
@@ -34,6 +35,7 @@
 		function loadVars() {
 			$log.info('loadVars called');
 			vm.assessorResponse = {};
+			vm.processIdExist = true;
 			$http({
 				method: 'GET',
 				withCredentials: true,
@@ -43,7 +45,7 @@
 				}
 			}).then(function successCallback(response) {
 				var data = response.data;
-
+				console.log('Data for the Process ID: ', data);
 				// if (data['process-instance-variables'] && data['process-instance-variables'].remediationSuccessful) {
 				if (data['process-instance-variables']) {	
 					vm.assessorResponse = {
@@ -84,6 +86,8 @@
 			}, function errorCallback(error) {
 				vm.comments = [];
 				vm.photos = [];
+				vm.processIdExist = false;
+				console.log('No Data found for Process ID: ', vm.processId);
 				$log.error(error);
 			});
 		}
