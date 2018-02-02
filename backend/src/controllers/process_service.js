@@ -12,6 +12,48 @@ let EXPOSED_SERVICES_SERVER_HOST = process.env.EXPOSED_SERVICES_SERVER_HOST + '/
 let notifications_service = require('../controllers/notifications_service');
 let claim_service = require('./claims_service');
 
+let processAddPhoto = (instanceId, fileName, source, cb) => {
+    console.log('app processAddPhoto');
+    let updateInfo = {
+        photoId: fileName,
+        updateSource: source
+    };
+
+    claim_service.signalHumanTask(instanceId, 'Update%20Information', error => {
+        if (!error) {
+            claim_service.listReadyTasks(instanceId, 'Update Information', (error, taskId) => {
+                if (!error) {
+                    claim_service.updateInformation(taskId, updateInfo, error => {
+                        if (!error) {
+                            let notification = {
+                                from: 'either',
+                                when: new Date(),
+                                message: 'ADD_COMMENT',
+                                readableMessage: 'New photo added',
+                                processId: instanceId
+                            };
+                            notifications_service.addResponderNotification(notification);
+                            cb(null, 'SUCCESS');
+                        } else {
+                            let msg = 'Unable to add photo, error: ' + error;
+                            console.error(error);
+                            cb(msg);
+                        }
+                    });
+                } else {
+                    let msg = '0 Unable to list ready tasks, error: ' + error;
+                    console.error(error);
+                    cb(msg);
+                }
+            });
+        } else {
+            let msg = 'Unable to signal for human task, error: ' + error;
+            console.error(error);
+            cb(msg);
+        }
+    });
+};
+
 exports.startProcess = (req, res) => {
     console.log('app startProcess');
     let claim = req.body;
