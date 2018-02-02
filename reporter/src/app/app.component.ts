@@ -30,7 +30,7 @@ export class MyApp implements OnDestroy {
       splashScreen.hide();
     });
 
-    this.notificationsSubcription = Observable.interval(3000).flatMap(i => this.http.get((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/notifications/reporter')).subscribe(res => {
+    this.notificationsSubcription = Observable.interval(10000).flatMap(i => this.http.get((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/notifications/reporter')).subscribe(res => {
       if (this.notifications && this.notifications.length !== res.json().length) {
         console.log(res.json().length);
         let notification = res.json().pop();
