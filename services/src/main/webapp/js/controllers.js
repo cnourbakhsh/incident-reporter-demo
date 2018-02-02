@@ -52,6 +52,7 @@
 						remediationSuccessful: data['process-instance-variables'].remediationSuccessful,
 						incidentStatus: data['process-instance-variables'].incidentStatus,
 					};
+					vm.approvalComments = data['process-instance-variables'].finalComments;
 				}
 				console.log('vm.assessorResponse: ', vm.assessorResponse);
 
