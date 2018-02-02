@@ -35,6 +35,7 @@
 		function loadVars() {
 			$log.info('loadVars called');
 			vm.assessorResponse = {};
+			vm.processIdExist = true;
 			$http({
 				method: 'GET',
 				withCredentials: true,
