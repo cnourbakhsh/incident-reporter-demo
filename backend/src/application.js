@@ -2,6 +2,7 @@ let port = +process.env.OPENSHIFT_NODEJS_PORT || 7001;
 let host = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
 let express = require('express');
+let compression = require('compression');
 let cors = require('cors');
 //let multer = require('multer');
 let fs = require('fs');
@@ -13,6 +14,7 @@ fs.mkdir('./dist/photos', function (err) {
 });
 
 let app = express();
+app.use(compression);
 app.use(cors());
 //let storage = multer.memoryStorage();
 //let upload = multer({ storage: storage });
