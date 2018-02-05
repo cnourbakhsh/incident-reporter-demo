@@ -7,10 +7,15 @@ let cors = require('cors');
 //let multer = require('multer');
 let fs = require('fs');
 
-fs.mkdir('./dist/photos', function (err) {
+fs.mkdir('./dist', function (err) {
     if (err && err.code !== 'EEXIST') {
         console.error(err);
     }
+    fs.mkdir('./dist/photos', function (err) {
+        if (err && err.code !== 'EEXIST') {
+            console.error(err);
+        }
+    });
 });
 
 let app = express();
