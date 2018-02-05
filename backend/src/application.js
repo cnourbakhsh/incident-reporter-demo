@@ -19,7 +19,7 @@ fs.mkdir('./dist', function (err) {
 });
 
 let app = express();
-app.use(compression);
+//app.use(compression);
 app.use(cors());
 //let storage = multer.memoryStorage();
 //let upload = multer({ storage: storage });
