@@ -161,6 +161,7 @@ exports.addComment = (req, res) => {
         comment: body.claimComments,
         updateSource: body.messageSource
     };
+    console.log('Comment and Source Info: ', updateInfo);
     claim_service.signalHumanTask(instanceId, 'Update%20Information', function (error) {
         if (!error) {
             claim_service.listReadyTasks(instanceId, 'Update Information', function (error, taskId) {
