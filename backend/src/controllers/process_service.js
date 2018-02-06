@@ -32,7 +32,12 @@ let processAddPhoto = (instanceId, fileName, source, cb) => {
                                 readableMessage: 'New photo added',
                                 processId: instanceId
                             };
-                            notifications_service.addResponderNotification(notification);
+                            
+                            if(source == "responder"){
+                                notifications_service.addReporterNotification(notification);
+                            } else {
+                                notifications_service.addResponderNotification(notification);
+                            }
                             cb(null, 'SUCCESS');
                         } else {
                             let msg = 'Unable to add photo, error: ' + error;
@@ -176,7 +181,13 @@ exports.addComment = (req, res) => {
                                 readableMessage: 'New comment added',
                                 processId: instanceId
                             };
-                            notifications_service.addReporterNotification(notification);
+
+                            if(body.messageSource == "responder"){
+                                notifications_service.addReporterNotification(notification);
+                            } else {
+                                notifications_service.addResponderNotification(notification);
+                            }
+                            
                             res.json('SUCCESS');
                         }
                         else {
