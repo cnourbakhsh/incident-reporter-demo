@@ -28,11 +28,12 @@ export class ClaimDetailsComponent implements OnInit {
 
   saveComment(): void {
     if (this.comment) {
-      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: this.comment, messageSource: 'responder' })).subscribe((res) => {
+      var newComment = "(A) " + this.comment;
+      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: newComment, messageSource: 'responder' })).subscribe((res) => {
         if (!this.claim.incidentComments) {
           this.claim.incidentComments = [];
         }
-        this.claim.incidentComments.push(this.comment);
+        this.claim.incidentComments.push(newComment);
         this.comment = '';
       });
     }
