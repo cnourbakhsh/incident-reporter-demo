@@ -13,11 +13,12 @@ let notifications_service = require('../controllers/notifications_service');
 let claim_service = require('./claims_service');
 
 let processAddPhoto = (instanceId, fileName, source, cb) => {
-    console.log('app processAddPhoto');
+    console.log('app processAddPhoto, Source = ', source);
     let updateInfo = {
         photoId: fileName,
         updateSource: source
     };
+    console.log('updateInfo: ', updateInfo);
 
     claim_service.signalHumanTask(instanceId, 'Update%20Information', error => {
         if (!error) {
@@ -33,7 +34,7 @@ let processAddPhoto = (instanceId, fileName, source, cb) => {
                                 processId: instanceId
                             };
                             
-                            if(source == "responder"){
+                            if(updateInfo.updateSource == "responder"){
                                 notifications_service.addReporterNotification(notification);
                             } else {
                                 notifications_service.addResponderNotification(notification);
