@@ -11,6 +11,9 @@ import 'rxjs/add/operator/mergeMap';
 import { HomePage } from '../pages/home/home';
 import { environment } from '../services/environment';
 import { ClaimService } from '../services/claims.service';
+import { ClaimDetailsComponent } from '../pages/claim-details/claim-details.component';
+import { Claim } from '../objects/Claim';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -21,6 +24,7 @@ export class MyApp implements OnDestroy {
   rootPage: any = HomePage;
   notifications: any[] = [];
   notificationsSubcription: Subscription;
+  claims: Claim[];
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private http: Http, private alertCtrl: AlertController, private claimService: ClaimService) {
     platform.ready().then(() => {
@@ -30,25 +34,50 @@ export class MyApp implements OnDestroy {
       splashScreen.hide();
     });
 
-    this.notificationsSubcription = Observable.interval(10000).flatMap(i => this.http.get((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/notifications/responder')).subscribe(res => {
+    this.notificationsSubcription = Observable.interval(5000).flatMap(i => this.http.get((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/notifications/responder')).subscribe(res => {
       if (this.notifications && this.notifications.length !== res.json().length) {
         console.log(res.json().length);
         let notification = res.json().pop();
         console.log(notification);
-        let alert = this.alertCtrl.create({
+        let confirm = this.alertCtrl.create({
           title: 'Attention',
-          subTitle: notification.readableMessage + ' for claim ' + notification.processId,
-          buttons: [{
-            text: 'OK', role: 'ok', handler: () => {
-              if (this.nav.canGoBack()) {
-                this.nav.pop();
+          message: notification.readableMessage + ' for claim ' + notification.processId + ', View Updates?',
+          buttons: [
+            {
+              text: 'No',
+              handler: () => {
+                console.log('NO - Dont want to View Claim Updates - ', this.nav);
+                //Keep the user in the same page as he is currently IN.
+                //if (this.nav.canGoBack()) {
+                // this.nav.pop();
+                //}
+              }
+            },
+            {
+              text: 'Yes',
+              handler: () => {
+                var pId = notification.processId;
+                this.goToClaimDetails(pId);
               }
             }
-          }]
+          ]
         });
-        alert.present();
+        confirm.present();
       }
       this.notifications = res.json();
+    });
+  }
+
+  private goToClaimDetails(pId: number): void {
+    console.log('processId : ', pId);    
+     this.claimService.GET((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/claims').subscribe((res) => {
+       this.claims = res;
+       for (let claim of this.claims){
+         if(claim.processId == pId){
+          console.log('Load Claims Details for Process Id: ', claim.processId);
+          this.nav.push(ClaimDetailsComponent, claim);
+         }         
+       }
     });
   }
 

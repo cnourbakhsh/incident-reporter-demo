@@ -8,7 +8,7 @@ import { ClaimService } from '../../services/claims.service';
 import { environment } from '../../services/environment';
 
 @Component({
-  selector: 'existing-claims',
+  selector: 'claim-details',
   templateUrl: 'claim-details.component.html'
 })
 export class ClaimDetailsComponent implements OnInit {
