@@ -55,8 +55,12 @@
 			color: #31708f;
 		}
 
-		li { background: #b0ddea; }
-		li:nth-child(odd) { background: #65b8d0; }
+		li { 
+			background: #fff7ec; 
+		}
+		li:nth-child(odd) { 
+			background: #d6ebff; 
+		}
 
 	</style>
 </head>
@@ -122,7 +126,7 @@
 								<div id="comments">
 									<label>Comments</label> &nbsp; ( A: Assessor, C: Customer )
 									<ul class="list-group">
-										<li ng-repeat="comment in vm.comments track by $index" class="list-group-item list-group-item-info">{{comment}}</li>
+										<li ng-repeat="comment in vm.comments track by $index" class="list-group-item">{{comment}}</li>
 									</ul>
 									<div ng-if="vm.comments.length < 1">
 										<i>No comments added.</i>
