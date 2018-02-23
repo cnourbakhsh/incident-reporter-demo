@@ -35,7 +35,7 @@ export class MyApp implements OnDestroy {
     });
 
     this.notificationsSubcription = Observable.interval(5000).flatMap(i => this.http.get((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/notifications/responder')).subscribe(res => {
-      if (this.notifications && this.notifications.length !== res.json().length) {
+      if (res.json().length > 0 && this.notifications && this.notifications.length !== res.json().length) {
         console.log(res.json().length);
         let notification = res.json().pop();
         console.log(notification);
