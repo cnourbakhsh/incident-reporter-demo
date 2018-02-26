@@ -35,7 +35,10 @@
     <div class="incident-content-area" *ngIf="claims && claims.length > 0">
         <ion-card *ngFor="let claim of claims | orderBy : '-processId'">
             <ion-card-header>
-                Claim {{claim.processId}} for {{claim.incident.incidentType}}
+                Claim {{claim.processId}} for {{claim.incident.incidentType}} &nbsp; 
+                <span *ngIf="notificationAlert == claim.processId"> &nbsp; &nbsp; 
+                    <ion-icon name="alert" style="zoom:1.4;"></ion-icon>                
+                </span>
                 <button class="btn-sm" style="float: right" (click)="onLoadClaimDetails(claim)">
                     <ion-icon name="arrow-dropright-circle" style="zoom:1.5;"></ion-icon>
                 </button>

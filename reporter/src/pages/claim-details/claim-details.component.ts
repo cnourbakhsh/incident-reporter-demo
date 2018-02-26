@@ -8,7 +8,7 @@ import { ClaimService } from '../../services/claims.service';
 import { environment } from '../../services/environment';
 
 @Component({
-  selector: 'existing-claims',
+  selector: 'claim-details',
   templateUrl: 'claim-details.component.html'
 })
 export class ClaimDetailsComponent implements OnInit {
@@ -30,11 +30,12 @@ export class ClaimDetailsComponent implements OnInit {
 
   saveComment(): void {
     if (this.comment) {
-      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: this.comment, messageSource: 'reporter' })).subscribe((res) => {
+      var newComment = "(C) " + this.comment;
+      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: newComment, messageSource: 'reporter' })).subscribe((res) => {
         if (!this.claim.incidentComments) {
           this.claim.incidentComments = [];
         }
-        this.claim.incidentComments.push(this.comment);
+        this.claim.incidentComments.push(newComment);
         this.comment = '';
       });
     }

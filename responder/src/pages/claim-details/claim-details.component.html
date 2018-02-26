@@ -2,14 +2,14 @@
     <ion-toolbar color="danger">
         <ion-buttons start>
             <button ion-button color="white" (click)='onBack()'>
-                <ion-icon name="arrow-dropleft-circle"> Back</ion-icon>
+                <ion-icon name="arrow-dropleft-circle"> Tickets</ion-icon>
             </button>
         </ion-buttons>
         <ion-title>Ticket Details</ion-title>
         <ion-buttons end>
             <button *ngIf="claim.incidentStatus === 'IN_PROGRESS'" ion-button color="white" (click)='onCloseTicket()'>
                 <!-- Complete Ticket -->
-                <ion-icon name="arrow-dropright-circle"> Next</ion-icon>
+                <ion-icon name="arrow-dropright-circle"> Review</ion-icon>
             </button>
         </ion-buttons>
     </ion-toolbar>

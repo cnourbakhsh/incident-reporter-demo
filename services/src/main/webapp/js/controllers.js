@@ -17,8 +17,9 @@
 		vm.updateCount = 0;
 		vm.autoUpdate = false;
 		vm.completed = false;
+		vm.processIdExist = true;
 
-		vm.approvalComments = 'Approval from supervisor app!';
+		vm.approvalComments = 'Supervisor Comments';
 		vm.remediationAccepted = true;
 
 		vm.assessorResponse = {};
@@ -33,6 +34,8 @@
 
 		function loadVars() {
 			$log.info('loadVars called');
+			vm.assessorResponse = {};
+			vm.processIdExist = true;
 			$http({
 				method: 'GET',
 				withCredentials: true,
@@ -42,14 +45,17 @@
 				}
 			}).then(function successCallback(response) {
 				var data = response.data;
-
-				if (data['process-instance-variables'] && data['process-instance-variables'].remediationSuccessful) {
+				console.log('Data for the Process ID: ', data);
+				// if (data['process-instance-variables'] && data['process-instance-variables'].remediationSuccessful) {
+				if (data['process-instance-variables']) {	
 					vm.assessorResponse = {
 						remediationSuccessful: data['process-instance-variables'].remediationSuccessful,
 						incidentStatus: data['process-instance-variables'].incidentStatus,
 					};
+					vm.approvalComments = data['process-instance-variables'].finalComments;
 				}
 				console.log('vm.assessorResponse: ', vm.assessorResponse);
+				console.log('vm.approvalComments: ', vm.approvalComments);
 
 				vm.comments = [];
 				vm.photos = [];
@@ -82,6 +88,8 @@
 			}, function errorCallback(error) {
 				vm.comments = [];
 				vm.photos = [];
+				vm.processIdExist = false;
+				console.log('No Data found for Process ID: ', vm.processId);
 				$log.error(error);
 			});
 		}

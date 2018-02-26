@@ -8,7 +8,7 @@ import { ClaimService } from '../../services/claims.service';
 import { environment } from '../../services/environment';
 
 @Component({
-  selector: 'existing-claims',
+  selector: 'claim-details',
   templateUrl: 'claim-details.component.html'
 })
 export class ClaimDetailsComponent implements OnInit {
@@ -28,11 +28,12 @@ export class ClaimDetailsComponent implements OnInit {
 
   saveComment(): void {
     if (this.comment) {
-      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: this.comment, messageSource: 'responder' })).subscribe((res) => {
+      var newComment = "(A) " + this.comment;
+      this.claimService.POST((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/add-comments/' + this.claim.processId, JSON.stringify({ claimComments: newComment, messageSource: 'responder' })).subscribe((res) => {
         if (!this.claim.incidentComments) {
           this.claim.incidentComments = [];
         }
-        this.claim.incidentComments.push(this.comment);
+        this.claim.incidentComments.push(newComment);
         this.comment = '';
       });
     }
@@ -65,7 +66,7 @@ export class ClaimDetailsComponent implements OnInit {
 
   private uploadBase64Image(base64Image: string): void {
     let headers = new Headers({ 'Content-Type': 'text/plain' });
-    this.http.post((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/accept-base64-image/' + this.claim.processId + '/' + 'photo-file' + '/reporter', base64Image, { headers: headers }).toPromise().then(res => {
+    this.http.post((this.claimService.mobileBackendURL ? this.claimService.mobileBackendURL : environment.mobileBackendUrl) + '/api/v1/bpms/accept-base64-image/' + this.claim.processId + '/' + 'photo-file' + '/responder', base64Image, { headers: headers }).toPromise().then(res => {
       if (res) {
         this.claim.photos.push(res.text());
       }

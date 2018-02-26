@@ -13,29 +13,21 @@
 			height: 425px;
 			width: 775px;
 			overflow: hidden;
-			padding-top: 20px;
-			/* float: left; */
 		}
-
 		#comments {
 			width: 100%;
-			/* float: left; */
 		}
-
 		.form-group {
 			margin-left: 20px;
 			margin-bottom: 10px;
 		}
-
 		.img-wrapper {
 			width: 150px;
 			float: left;
 		}
-
 		.img-rounded {
 			padding-top: 15px;
 		}
-
 		.img-rounded:hover {
 			position: relative;
 			top: -25px;
@@ -45,20 +37,31 @@
 			display: block;
 			z-index: 999;
 		}
-
 		.input-group{
 			display: inline-table;
 			margin-bottom: 15px;
 			margin-left: 10px;
 		}
-
 		.input-group-addon{
 			font-weight: bold;
 		}
-
-		.list-group-item{
-			background-color: none; 
+		.list-group{
+			margin-bottom: 0px;
+			max-height: 123px;
+    		overflow-y: scroll;
 		}
+		.list-group-item{
+			background-color: #f5f5f5; 
+			color: #31708f;
+		}
+
+		li { 
+			background: #fff7ec; 
+		}
+		li:nth-child(odd) { 
+			background: #d6ebff; 
+		}
+
 	</style>
 </head>
 
@@ -93,31 +96,35 @@
 							</div>
 						</div>
 						<div class="col-md-4">
-							<div class="well well-sm" ng-show="vm.assessorResponse.remediationSuccessful == 'true'">
+							<!-- <div class="well well-sm" ng-show="vm.assessorResponse.remediationSuccessful == 'true'"> -->
+							<div class="well well-sm">
 								<form>
-									<div class="form-group">
+									<div class="form-group" ng-show="vm.processIdExist">
 										<label>Assessor Response: </label>
 										<label>{{vm.assessorResponse.incidentStatus}}</label>
 									</div>
-									<div class="form-group">
-										<label for="pApprovalComments">Supervisor comments: </label>
+									<div class="form-group" ng-show="vm.processIdExist">
+										<label for="pApprovalComments">Supervisor Comments: </label>
 										<input class="form-control" type="text" id="pApprovalComments" size="25" ng-model="vm.approvalComments" ng-disabled="!vm.completed"
-										 placeholder="Approval Comments" />
+										 placeholder="Supervisor Comments" />
 									</div>
-									<div class="form-group">
+									<div class="form-group" ng-show="vm.processIdExist">
 										<input type="radio" name="actions" id="acceptedRadio" ng-model="vm.remediationAccepted" ng-value="true" ng-disabled="!vm.completed">
 										<label for="acceptedRadio">Accepted</label> &NonBreakingSpace; 
 										<input type="radio" name="actions" id="rejectedRadio" ng-model="vm.remediationAccepted" ng-value="false" ng-disabled="!vm.completed">
 										<label for="rejectedRadio">Rejected</label> &NonBreakingSpace; 
 										<button class="btn btn-default" ng-click="vm.submit()" ng-disabled="!vm.completed">Submit</button>
 									</div>
+									<div class="form-group" ng-if="!vm.processIdExist" style="height: 135px;"><br>
+										<span style = "color: red; font-weight: bold;">No Claim Record found.</span>
+									</div>
 								</form>
 							</div>
 						</div>
 						<div class="col-md-4">							
-							<div class="well well-sm" ng-show="vm.assessorResponse.remediationSuccessful == 'true'">
+							<div class="well well-sm">
 								<div id="comments">
-									<label>Comments</label>
+									<label>Comments</label> &nbsp; ( A: Assessor, C: Customer )
 									<ul class="list-group">
 										<li ng-repeat="comment in vm.comments track by $index" class="list-group-item">{{comment}}</li>
 									</ul>
@@ -125,20 +132,22 @@
 										<i>No comments added.</i>
 									</div>
 								</div>							
-							</div>
+							</div>							
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-8">
 							<div class="well well-sm">
+								<div>
+									<label>Claims Process Flow Diagram</label>
+								</div>
 								<div id="image">
 									<br />
 								</div>
 							</div>
-						</div>						
-					</div>
-					<div class="row" style="padding-bottom: 50px; padding-left: 50px">
-						<div class="col-md-12" ng-show="vm.assessorResponse.remediationSuccessful == 'true'">
+						</div>
+						<div class="col-md-4">
+							<div class="well well-sm">
 							<div>
 								<label>Photo Thumbnails</label>
 							</div>
@@ -152,8 +161,10 @@
 							<div ng-if="vm.photos.length < 1">
 								<i>No photos uploaded.</i>
 							</div>
-						</div>
+							</div>
+						</div>						
 					</div>
+					
 				</div>
 			</div>
 		</div>

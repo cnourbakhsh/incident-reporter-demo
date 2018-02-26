@@ -5,7 +5,7 @@ import { ClaimService } from '../../services/claims.service';
 import { environment } from '../../services/environment';
 
 @Component({
-  selector: 'existing-claims',
+  selector: 'adjust-claim',
   templateUrl: 'adjust-claim.component.html'
 })
 export class AdjustClaimComponent implements OnInit {
