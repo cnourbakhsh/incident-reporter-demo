@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+alias lc="ls -aF"
+alias gs="git status"
+
 cd /home/ec2-user/incident-reporter-demo
 
 git checkout consolidated

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-alias lc="ls -aF"
-alias gs="git status"
-
 #This script will deploy the project on the openshift platform
 
 #Check requirements
