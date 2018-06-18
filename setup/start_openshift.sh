@@ -19,4 +19,7 @@ export EXTERNAL_IP_ADDRESS="`curl http://169.254.169.254/latest/meta-data/public
 
 export EXTERNAL_HOSTNAME="`curl http://169.254.169.254/latest/meta-data/public-hostname`"
 
+echo "EXTERNAL_IP_ADDRESS: $EXTERNAL_IP_ADDRESS"
+echo "EXTERNAL_HOSTNAME: $EXTERNAL_HOSTNAME"
+
 oc cluster up --routing-suffix=$EXTERNAL_IP_ADDRESS.nip.io --public-hostname=$EXTERNAL_HOSTNAME 
