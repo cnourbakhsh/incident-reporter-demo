@@ -1,8 +1,10 @@
 {
   "name": "refactored-mobile-backend",
   "version": "0.4.0",
+  "description": "mobile-backend for OpenShift Node.js",
   "dependencies": {
-    "compression": "^1.7.1"
+    "compression": "^1.7.1",
+    "express": "^4.16.2"
   },
   "main": "./src/application.js",
   "scripts": {
